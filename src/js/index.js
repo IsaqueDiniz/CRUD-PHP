@@ -2,12 +2,15 @@
 
 import Listeners from './listeners.js'; // Listeners
 import Validator from './validator.js'; // Validação
+import Row from './component.js';
 
 const Main = (function() {
 	// Main scope
-	Listeners.set('editar', (evt) => console.log(evt.target)); // edit
-	Listeners.set('deletar', (evt) => console.log(evt.target)); // delete
-	Listeners.set('addRegis', (evt) => console.log(evt.target)); // adicionar
+
+
+	Listeners.set('addBook', evt => {
+		Row.writeRow(Validator.getFields(true));
+	})
 
 	console.log('INDEX JS');
 

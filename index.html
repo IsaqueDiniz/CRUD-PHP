@@ -15,7 +15,7 @@
 			
 			<nav class="row navbar navbar-expand-lg navbar-dark bg-dark  d-flex justify-content-between">
 				<h2 class="ml-5 text-light mt-1">Lista de Livros</h2>
-				<button id="addRegis" type="button" class="btn btn-sm mr-5" data-toggle="modal" data-target="#formModal">Adicionar</button>
+				<button id="" type="button" class="btn btn-sm mr-5" data-toggle="modal" data-target="#formModal">Adicionar</button>
 			</nav>
 
 			<aside class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -50,7 +50,7 @@
 								</div>
 							<div class="modal-footer">
 								<input class="btn btn-secondary" type="reset" value="Limpar">
-								<input class="btn btn-primary" type="button" id="submit" value="Enviar">
+								<input class="btn btn-primary" type="button" id="addBook" value="Adicionar">
 							<div>
 						</form>
 					</div>
@@ -130,7 +130,7 @@
 								<th>Excluir</th>
 							</tr>
 						</thead>
-						<tbody>
+						<tbody id="bodyTable">
 							<tr>
 								<td>Valor</td>
 								<td>Valor</td>
@@ -139,7 +139,7 @@
 								<td>Valor</td>
 								<td><button id="editar" class="btn btn-sm btn-warning" type="button" data-toggle="modal" data-target="#editModal">Editar</button></td>
 								<td><button id="deletar" class="btn btn-sm btn-danger" type="button" data-toggle="modal" data-target="#deleteModal">Deletar</button></td>
-							</tr>
+							</tr>							
 						</tbody>
 					</table>
 			</main>
