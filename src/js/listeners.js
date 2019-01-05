@@ -1,14 +1,27 @@
 "use strict";
 
+
 class Listeners {
 
-	static set(ref, callback, event) {
-		if(!event) {
-			document.getElementById(ref)
-				.addEventListener('click', callback);
-		}else {
+	static set(ref, callback, e) {
+		const event = e || 'click';
+
+		if(typeof ref === 'string'){
 			document.getElementById(ref)
 				.addEventListener(event, callback);			
+		}else {
+			ref.addEventListener(event, callback);
+		}
+	}
+
+	static remove(ref, callback, e){
+		const event = e || 'click';
+
+		if(typeof ref == 'string'){
+			document.getElementById(ref)
+				.removeEventListener(event, callback);
+		}else{
+			ref.removeEventListener(event, callback);
 		}
 	}
 
