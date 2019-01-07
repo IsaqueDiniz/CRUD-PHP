@@ -1,6 +1,5 @@
 "use strict";
 
-
 class Listeners {
 
 	static set(ref, callback, e) {
