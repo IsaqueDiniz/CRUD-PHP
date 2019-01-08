@@ -21,16 +21,16 @@ const Main = (function() {
 		if(Validator.validateAddInputs(valuesState)) {
 			const values = Validator.defineObj($addFields, false);
 			const book = new Book(values);
-
-			book 
-				.writeRow()
-				.attachEditEvent()
-				.attachDeleteEvent();
-
+						book.writeRow().attachEditEvent().attachDeleteEvent();
 			Books.push(book);
+
 			Validator.clearInputs($addFields);		
-			$('#formModal').modal('toggle');
-			console.log(Books);
+			Validator.changeBoxMsg($boxMsg, Validator.messages().addedSuccessful, 'success');
+
+			setTimeout(() => {
+				$('#formModal').modal('toggle');
+				Validator.changeBoxMsg($boxMsg, Validator.messages().default, 'primary');
+			}, 1000);	
 
 		}	else {
 			const $wrongInputs = Validator.wrongInputsRef(valuesState, $addFields); // obj with DOM reference from wrong fields
@@ -45,15 +45,13 @@ const Main = (function() {
 			}
 
 			function showWrongInputs(evt) {
-				// manage inputs to red 
+				//Manage the wrong inputs when when clicked remove the red color
 				evt.target.style.background = 'transparent';
 				wrongInputsCount--;
-				console.log(wrongInputsCount);
 				if(wrongInputsCount <= 0 ) {
 					wrongInputsCount = 0;
 					Validator.changeBoxMsg($boxMsg, Validator.messages().default, 'primary');
 				}				
-				console.log(wrongInputsCount);
 				Listeners.remove(evt.target, showWrongInputs, 'focus');
 			}
 		}

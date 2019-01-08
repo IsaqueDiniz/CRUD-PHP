@@ -124,24 +124,31 @@ class Validator {
 	}
 
 	static changeBoxMsg(boxRef, text, state){
-		//Take a DOM reference of a input, and change de color with 'state' attr, and set a new text;		
+		//Take a DOM reference of a box, and change de color with 'state' attr, and set a new text;		
+		boxRef.textContent = text;
 		if(state === 'danger') {
-			boxRef.textContent = text;
-			boxRef.classList.remove('alert-primary')
-			boxRef.classList.remove('alert-warning')
-			boxRef.classList.add('alert-danger')
+			boxRef.classList.remove('alert-success');
+			boxRef.classList.remove('alert-primary');
+			boxRef.classList.remove('alert-warning');
+			boxRef.classList.add('alert-danger');
 		}
 		if(state === 'primary') {
-			boxRef.textContent = text;
+			boxRef.classList.remove('alert-success');
 			boxRef.classList.remove('alert-danger');
-			boxRef.classList.remove('alert-warning')
+			boxRef.classList.remove('alert-warning');
 			boxRef.classList.add('alert-primary');
 		}
 		if(state === 'warning') {
-			boxRef.textContent = text;
+			boxRef.classList.remove('alert-success');
 			boxRef.classList.remove('alert-danger');
-			boxRef.classList.remove('alert-primary')
+			boxRef.classList.remove('alert-primary');
 			boxRef.classList.add('alert-warning');
+		}
+		if(state === 'success'){
+			boxRef.classList.remove('alert-warning');
+			boxRef.classList.remove('alert-danger');
+			boxRef.classList.remove('alert-primary');
+			boxRef.classList.add('alert-success');
 		}
 	}
 
