@@ -105,6 +105,11 @@ class Validator {
 		}
 	}
 
+	static clearInputs(refObj) {
+		for(let key in refObj)
+			refObj[key].value = '';			
+	}
+
 	static wrongInputsRef(state, ref) {
 		// return the DOM reference from wrong inputs
 		const obj = {};

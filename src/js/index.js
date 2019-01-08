@@ -17,36 +17,22 @@ const Main = (function() {
 		const $addFields = Validator.getAddFields(); // take the inputs
 		const valuesState = Validator.getValidsInputs($addFields); // state of the inputs
 
-		function defineObj(ref, option) {
-					if(option){		
-						return {
-							livro : ref.$e_livro.value,
-							publicacao : ref.$e_publicacao.value,
-							autor : ref.$e_autor.value,
-							editora : ref.$e_editora.value,
-							ISBN : ref.$e_ISBN.value
-						}
-					}
-					return {
-						livro : ref.$a_livro.value,
-						publicacao : ref.$a_publicacao.value,
-						autor : ref.$a_autor.value,
-						editora : ref.$a_editora.value,
-						ISBN : ref.$a_ISBN.value
-					}	
-				}
 
 		if(Validator.validateAddInputs(valuesState)) {
-			const values = defineObj($addFields, false);
+			const values = Validator.defineObj($addFields, false);
 			const book = new Book(values);
-			book
+
+			book 
 				.writeRow()
 				.attachEditEvent()
 				.attachDeleteEvent();
-			Books.push(book);		
-			// alert('Tudo ok');
+
+			Books.push(book);
+			Validator.clearInputs($addFields);		
+			$('#formModal').modal('toggle');
 			console.log(Books);
-		}else {
+
+		}	else {
 			const $wrongInputs = Validator.wrongInputsRef(valuesState, $addFields); // obj with DOM reference from wrong fields
 			let wrongInputsCount = Object.keys($wrongInputs).length;
 					console.log(wrongInputsCount);
@@ -74,4 +60,3 @@ const Main = (function() {
 	}
 
 })();
-
