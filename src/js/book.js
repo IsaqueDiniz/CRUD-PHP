@@ -5,16 +5,10 @@ import Listener from './listeners.js';
 
 class Book {
 
-	static setID(number){
-		const preId = String(Date.now()).split('').reverse().join('').slice(0, 3)		
-		const id = number + preId;
-		return id;
-	}	
-
-	constructor({ livro, publicacao, autor, editora, ISBN }){
+	constructor({ livro, publicacao, autor, editora, ISBN }) {
 		// properties for go to database
 		this.props = {
-			id : ISBN * 2,
+			id : this.setID(ISBN),
 			livro : livro,
 			publicacao : publicacao,
 			autor : autor,
@@ -33,7 +27,7 @@ class Book {
 	}
 
 	//Set event to edit method 
-	attachEditEvent(){
+	attachEditEvent() {
 		const $saveEditBTN = document.getElementById('saveEdit') 
 		const { id, livro, publicacao, autor, editora, ISBN } = this.props;  // all props from the current obj
 		const { edit_btn } = this.DOM.buttons;
@@ -47,11 +41,11 @@ class Book {
 	}
 
 	//Set event to delete method
-	attachDeleteEvent(){
+	attachDeleteEvent() {
 		return this;
 	}
 
-	writeRow(){
+	create() {
 		const { id, livro, publicacao, autor, editora, ISBN } = this.props;
 		
 		const { edit_btn, delete_btn } = this.DOM.buttons;
@@ -77,10 +71,15 @@ class Book {
 		return this;
 	}
 
-	getProps(){
+	getProps() {
 		return this.props;
 	}
 
+	setID(number) {
+		const preId = String(Date.now()).split('').reverse().join('').slice(0, 3);		
+		const id = number + preId;
+		return id;
+	}	
 
 
 }

@@ -21,7 +21,7 @@ const Main = (function() {
 		if(Validator.validateAddInputs(valuesState)) {
 			const values = Validator.defineObj($addFields, false);
 			const book = new Book(values);
-						book.writeRow().attachEditEvent().attachDeleteEvent();
+						book.create().attachEditEvent().attachDeleteEvent();
 			Books.push(book);
 
 			Validator.clearInputs($addFields);		
@@ -29,7 +29,7 @@ const Main = (function() {
 
 			setTimeout(() => {
 				$('#formModal').modal('toggle');
-				Validator.changeBoxMsg($boxMsg, Validator.messages().default, 'primary');
+					Validator.changeBoxMsg($boxMsg, Validator.messages().default, 'primary');
 			}, 1000);	
 
 		}	else {
@@ -54,6 +54,14 @@ const Main = (function() {
 				}				
 				Listeners.remove(evt.target, showWrongInputs, 'focus');
 			}
+
+			$('#formModal').on('hidden.bs.modal', evt => { //reset the form when hidden event dispared
+				Validator.clearInputs($addFields);
+				Validator.changeBoxMsg($boxMsg, Validator.messages().default, 'primary');
+				wrongInputsCount = 0;
+				for(let key in $addFields)
+					$addFields[key].style.background = 'transparent';								
+			});
 		}
 	}
 
