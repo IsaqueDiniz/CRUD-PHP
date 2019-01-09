@@ -3,6 +3,7 @@
 import Book from './book.js'; // Book class
 import Listeners from './listeners.js'; // Listeners
 import Validator from './validator.js'; // Validators
+import Utils from './utility.js' // Utilities
 
 const Main = (function() {
 	// Main scope
@@ -24,21 +25,20 @@ const Main = (function() {
 						book.create().attachEditEvent().attachDeleteEvent();
 			Books.push(book);
 
-			Validator.clearInputs($addFields);		
-			Validator.changeBoxMsg($boxMsg, Validator.messages().addedSuccessful, 'success');
+			Utils.clearInputs($addFields);		
+			Utils.changeBoxMsg($boxMsg, Utils.messages().addedSuccessful, 'success');
 
 			setTimeout(() => {
 				$('#formModal').modal('toggle');
-					Validator.changeBoxMsg($boxMsg, Validator.messages().default, 'primary');
-			}, 1000);	
+					Utils.changeBoxMsg($boxMsg, Utils.messages().default, 'primary');
+			}, 750);	
 
 		}	else {
 			const $wrongInputs = Validator.wrongInputsRef(valuesState, $addFields); // obj with DOM reference from wrong fields
-			let wrongInputsCount = Object.keys($wrongInputs).length;
-					console.log(wrongInputsCount);
+			let wrongInputsCount = Object.keys($wrongInputs).length; // number of wrong inputs
 
-			Validator.changeBoxMsg($boxMsg, Validator.messages().wrongFields, 'danger'); 
-			Validator.changeColor($wrongInputs);
+			Utils.changeBoxMsg($boxMsg, Utils.messages().wrongFields, 'danger'); 
+			Utils.changeInputColor($wrongInputs);
 
 			for(let key in $wrongInputs) {
 				Listeners.set($wrongInputs[key], showWrongInputs, 'focus');
@@ -50,14 +50,15 @@ const Main = (function() {
 				wrongInputsCount--;
 				if(wrongInputsCount <= 0 ) {
 					wrongInputsCount = 0;
-					Validator.changeBoxMsg($boxMsg, Validator.messages().default, 'primary');
+					Utils.changeBoxMsg($boxMsg, Utils.messages().default, 'primary');
 				}				
 				Listeners.remove(evt.target, showWrongInputs, 'focus');
 			}
 
-			$('#formModal').on('hidden.bs.modal', evt => { //reset the form when hidden event dispared
-				Validator.clearInputs($addFields);
-				Validator.changeBoxMsg($boxMsg, Validator.messages().default, 'primary');
+			$('#formModal').on('hidden.bs.modal', evt => {
+			//reset the form when hidden event dispared
+				Utils.clearInputs($addFields);
+				Utils.changeBoxMsg($boxMsg, Utils.messages().default, 'primary');
 				wrongInputsCount = 0;
 				for(let key in $addFields)
 					$addFields[key].style.background = 'transparent';								

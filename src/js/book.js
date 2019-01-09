@@ -19,9 +19,9 @@ class Book {
 		this.DOM = {
 			id_row : this.props.id,
 			buttons : {
-				edit_btn : 'edit' + this.props.livro,
-				delete_btn : 'delete' + this.props.livro,
-				saveEdit_btn : 'saveEdit' + this.props.livro
+				edit_btn : `edit-${this.props.livro}`,
+				delete_btn : `delete-${this.props.livro}`,
+				saveEdit_btn : `'saveEdit-'${this.props.livro}`
 			}
 		};
 	}
@@ -61,7 +61,7 @@ class Book {
 			<td>${ autor }</td>
 			<td>${ editora }</td>
 			<td>${ ISBN }</td>
-			<td><button id="${ edit_btn }" class="btn btn-sm btn-warning">Editar</button></td>
+			<td><button id="${ edit_btn }" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#editModal">Editar</button></td>
 			<td><button id="${ delete_btn }" class="btn btn-sm btn-danger">Deletar</button></td>
 		`;
 
@@ -81,6 +81,7 @@ class Book {
 		return id;
 	}	
 
+	
 
 }
 

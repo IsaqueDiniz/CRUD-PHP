@@ -80,36 +80,6 @@ class Validator {
 		return result;
 	}
 
-	static messages() { // utilities messages
-		return {
-			wrongFields : 'Preencha os campos em vermelho corretamente:',
-			okAlert : 'Todos os campos estão corretos!',
-			addedSuccessful : 'Adicionado com sucesso',
-			default : 'Preencha todos os campos abaixo com no mínimo 7 caracteres'
-		}
-	}
-
-	static changeColor(inputsRef, c){
-	 // change de color of the inputs
-		const color = c || '#FFE1E1'
-
-		for(let key in inputsRef) {
-				inputsRef[key].style.background = color;
-		}
-	}
-
-	static resetInputs(inputs) {
-	 // take the inputs DOM references and clear the values of that
-		for(let key in inputs){
-			inputs[key].value = '';
-		}
-	}
-
-	static clearInputs(refObj) {
-		for(let key in refObj)
-			refObj[key].value = '';			
-	}
-
 	static wrongInputsRef(state, ref) {
 		// return the DOM reference from wrong inputs
 		const obj = {};
@@ -121,35 +91,6 @@ class Validator {
 		}
 
 		return obj;
-	}
-
-	static changeBoxMsg(boxRef, text, state){
-		//Take a DOM reference of a box, and change de color with 'state' attr, and set a new text;		
-		boxRef.textContent = text;
-		if(state === 'danger') {
-			boxRef.classList.remove('alert-success');
-			boxRef.classList.remove('alert-primary');
-			boxRef.classList.remove('alert-warning');
-			boxRef.classList.add('alert-danger');
-		}
-		if(state === 'primary') {
-			boxRef.classList.remove('alert-success');
-			boxRef.classList.remove('alert-danger');
-			boxRef.classList.remove('alert-warning');
-			boxRef.classList.add('alert-primary');
-		}
-		if(state === 'warning') {
-			boxRef.classList.remove('alert-success');
-			boxRef.classList.remove('alert-danger');
-			boxRef.classList.remove('alert-primary');
-			boxRef.classList.add('alert-warning');
-		}
-		if(state === 'success'){
-			boxRef.classList.remove('alert-warning');
-			boxRef.classList.remove('alert-danger');
-			boxRef.classList.remove('alert-primary');
-			boxRef.classList.add('alert-success');
-		}
 	}
 
 }
