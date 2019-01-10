@@ -11,7 +11,7 @@ const Main = (function() {
 
 	//Listeners
 	Listeners.set('newBookBTN', newBook);
-	console.log('teste');
+	console.log('Valor alterado');
 
 	//Functions
 	function newBook(evt) {

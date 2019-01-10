@@ -17,24 +17,25 @@ class Book {
 		};
 		//take and set the dom references
 		this.DOM = {
-			id_row : this.props.id,
+			rowID : this.props.id,
 			buttons : {
-				edit_btn : `edit-${this.props.livro}`,
-				delete_btn : `delete-${this.props.livro}`,
-				saveEdit_btn : `'saveEdit-'${this.props.livro}`
+				edit_btn : `edit_${this.props.livro}`,
+				delete_btn : `delete_${this.props.livro}`,
+				saveEdit_btn : `'saveEdit_'${this.props.livro}`
 			}
 		};
 	}
 
 	//Set event to edit method 
 	attachEditEvent() {
-		const $saveEditBTN = document.getElementById('saveEdit') 
+		const $saveEditBTN = document.getElementById('saveEdit'); 
 		const { id, livro, publicacao, autor, editora, ISBN } = this.props;  // all props from the current obj
 		const { edit_btn } = this.DOM.buttons;
 		const { $e_livro, $e_publicacao, $e_autor, $e_editora, $e_ISBN } = Validator.getEditFields(); // get the edit fields
 
 		Listener.set(edit_btn, evt => {
-			alert(evt.target);		
+			Validator.configureEditModal(this.props);
+			console.log($saveEditBTN.dataset.book_id);
 		});
 
 		return this;

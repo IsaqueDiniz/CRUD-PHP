@@ -93,6 +93,17 @@ class Validator {
 		return obj;
 	}
 
+	static configureEditModal(props) {
+		const { $e_livro, $e_publicacao, $e_autor, $e_editora, $e_ISBN } = Validator.getEditFields();
+
+		$e_livro.value = props.livro;
+		$e_publicacao.value = props.publicacao;
+		$e_autor.value = props.autor;
+		$e_editora.value = props.editora;
+		$e_ISBN.value = props.ISBN;
+
+	}
+
 }
 
 export default Validator;
