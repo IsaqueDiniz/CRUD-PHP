@@ -1,9 +1,9 @@
 "use strict";
 
-import Book from './book.js'; // Book class
-import Listeners from './listeners.js'; // Listeners
-import Validator from './validator.js'; // Validators
-import Utils from './utility.js' // Utilities
+import Book from './js/book.js'; // Book class
+import Listeners from './js/listeners.js'; // Listeners
+import Validator from './js/validator.js'; // Validators
+import Utils from './js/utility.js' // Utilities
 
 const Main = (function() {
 	// Main scope
@@ -11,6 +11,7 @@ const Main = (function() {
 
 	//Listeners
 	Listeners.set('newBookBTN', newBook);
+	console.log('teste');
 
 	//Functions
 	function newBook(evt) {

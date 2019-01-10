@@ -1,0 +1,24 @@
+{
+  "name": "CRUD-PHP",
+  "version": "1.0.0",
+  "description": "A simple full-stack appication to manipulate a list of books",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IsaqueDiniz/CRUD-PHP.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/IsaqueDiniz/CRUD-PHP/issues"
+  },
+  "homepage": "https://github.com/IsaqueDiniz/CRUD-PHP#readme",
+  "devDependencies": {
+    "webpack": "^4.28.4",
+    "webpack-cli": "^3.2.1"
+  }
+}

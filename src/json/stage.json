@@ -1,9 +1,0 @@
-[
-	{
-		"id" : 1,
-		"nome_livro" : "nomeLivro",
-		"data_publicacao" : "dataPublic",
-		"autor" : "nome_autor",
-		"ISBN" : 123456789
-	}
-]
