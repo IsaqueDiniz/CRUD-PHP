@@ -1,5 +1,7 @@
 "use strict";
 
+import Utils from './utility.js';
+
 class Validator {
 
 	static getAddFields() {
@@ -93,8 +95,8 @@ class Validator {
 		return obj;
 	}
 
-	static configureEditModal(props) {
-		const { $e_livro, $e_publicacao, $e_autor, $e_editora, $e_ISBN } = Validator.getEditFields();
+	static configureEditModal(props, $saveBTN, fields) {
+		const { $e_livro, $e_publicacao, $e_autor, $e_editora, $e_ISBN } = fields;
 
 		$e_livro.value = props.livro;
 		$e_publicacao.value = props.publicacao;
@@ -102,6 +104,14 @@ class Validator {
 		$e_editora.value = props.editora;
 		$e_ISBN.value = props.ISBN;
 
+		$saveBTN.dataset.id_book = props.id;
+
+		Utils.changeInputColor(fields, 'transparent');
+		Utils.changeBoxMsg(
+			document.getElementById('editMessage'),
+			Utils.messages().default,
+			'primary'
+		);
 	}
 
 }

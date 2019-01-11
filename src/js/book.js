@@ -1,7 +1,8 @@
 "use strict";
 
 import Validator from './validator.js';
-import Listener from './listeners.js';
+import Listeners from './listeners.js';
+import Utils from './utility.js';
 
 class Book {
 
@@ -28,15 +29,44 @@ class Book {
 
 	//Set event to edit method 
 	attachEditEvent() {
-		const $saveEditBTN = document.getElementById('saveEdit'); 
 		const { id, livro, publicacao, autor, editora, ISBN } = this.props;  // all props from the current obj
 		const { edit_btn } = this.DOM.buttons;
-		const { $e_livro, $e_publicacao, $e_autor, $e_editora, $e_ISBN } = Validator.getEditFields(); // get the edit fields
+		
+		const $saveEdit = document.getElementById('saveEdit'); 
+		const $editFields = Validator.getEditFields(); // get the edit fields
 
-		Listener.set(edit_btn, evt => {
-			Validator.configureEditModal(this.props);
-			console.log($saveEditBTN.dataset.book_id);
-		});
+		Listeners.set(edit_btn, () => Validator.configureEditModal(this.props, $saveEdit, $editFields));
+		Listeners.set($saveEdit, editThisBook);
+
+
+		function editThisBook(evt) {
+			const $boxMsg = document.getElementById('editMessage');
+			const valuesState = Validator.getValidsInputs($editFields); 
+
+			if(Validator.validateEditInputs(valuesState)) {
+				alert('Tudo certo');
+			}else {
+				const $wrongInputs = Validator.wrongInputsRef(valuesState, $editFields);
+				let wrongInputsCount = Object.keys($wrongInputs).length;
+
+				Utils.changeBoxMsg($boxMsg, Utils.messages().wrongFields, 'danger');
+				Utils.changeInputColor($wrongInputs);
+
+				for(let key in $wrongInputs)
+						Listeners.set($wrongInputs[key], showWrongInputs, 'focus');
+
+				function showWrongInputs(evt) {
+					//Manage the wrong inputs when clicked remove the red color
+					evt.target.style.background = 'transparent';
+					wrongInputsCount--;
+					if(wrongInputsCount <= 0){
+						wrongInputsCount = 0;
+						Utils.changeBoxMsg($boxMsg, Utils.messages().default, 'primary');
+					}
+					Listeners.remove(evt.target, showWrongInputs, 'focus');	
+				}	
+			}
+		}
 
 		return this;
 	}
