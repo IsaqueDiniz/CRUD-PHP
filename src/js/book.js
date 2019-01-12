@@ -3,13 +3,14 @@
 import Validator from './validator.js';
 import Listeners from './listeners.js';
 import Utils from './utility.js';
+import dbScope from './db.js';
 
 class Book {
 
 	constructor({ livro, publicacao, autor, editora, ISBN }) {
 		// properties for go to database
 		this.props = {
-			id : this.setID(ISBN),
+			id : this.setID(),
 			livro : livro,
 			publicacao : publicacao,
 			autor : autor,
@@ -29,7 +30,8 @@ class Book {
 
 	//Set event to edit method 
 	attachEditEvent() {
-		const { id, livro, publicacao, autor, editora, ISBN } = this.props;  // all props from the current obj
+		const _this = this;
+		const bookProps = this.getProps();  // all props from the current obj
 		const { edit_btn } = this.DOM.buttons;
 		
 		const $saveEdit = document.getElementById('saveEdit'); 
@@ -44,7 +46,13 @@ class Book {
 			const valuesState = Validator.getValidsInputs($editFields); 
 
 			if(Validator.validateEditInputs(valuesState)) {
-				alert('Tudo certo');
+				const editedValues = Validator.defineObj($editFields, true);		
+				const { id }  = bookProps;  
+
+				_this.setProps(editedValues);
+
+				dbScope.editOne(_this.getProps(), id);
+
 			}else {
 				const $wrongInputs = Validator.wrongInputsRef(valuesState, $editFields);
 				let wrongInputsCount = Object.keys($wrongInputs).length;
@@ -106,13 +114,15 @@ class Book {
 		return this.props;
 	}
 
+	setProps(obj){
+		for(let key in obj)
+			this.props[key] = obj[key];
+	}
+
 	setID(number) {
-		const preId = String(Date.now()).split('').reverse().join('').slice(0, 3);		
-		const id = number + preId;
+		const id = String(Date.now()).split('').reverse().join('').slice(0, 5);		
 		return id;
 	}	
-
-	
 
 }
 

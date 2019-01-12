@@ -3,15 +3,17 @@
 import Book from './js/book.js'; // Book class
 import Listeners from './js/listeners.js'; // Listeners
 import Validator from './js/validator.js'; // Validators
-import Utils from './js/utility.js' // Utilities
+import Utils from './js/utility.js'; // Utilities
+import dbScope from './js/db.js'; // Scope to all books
+
 
 const Main = (function() {
 	// Main scope
-	const Books = [];
+
+	console.log(dbScope.getBooks());	
 
 	//Listeners
 	Listeners.set('newBookBTN', newBook);
-	console.log('Valor alterado');
 
 	//Functions
 	function newBook(evt) {
@@ -24,7 +26,8 @@ const Main = (function() {
 			const values = Validator.defineObj($addFields, false);
 			const book = new Book(values);
 						book.create().attachEditEvent().attachDeleteEvent(); // set all configuration to the current registry
-			Books.push(book); 
+			dbScope.pushOne(book);
+			console.log(dbScope.getBooks());
 
 			// after added new registry, close and reset the modal
 			Utils.clearInputs($addFields);		
@@ -34,8 +37,6 @@ const Main = (function() {
 				$('#formModal').modal('toggle');
 					Utils.changeBoxMsg($boxMsg, Utils.messages().default, 'primary');
 			}, 600);
-
-			console.log(Books);	
 
 		}	else {
 			const $wrongInputs = Validator.wrongInputsRef(valuesState, $addFields); // obj with DOM reference from wrong fields
