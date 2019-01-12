@@ -30,57 +30,12 @@ class Book {
 
 	//Set event to edit method 
 	attachEditEvent() {
-		const _this = this;
-		const bookProps = this.getProps();  // all props from the current obj
-		const { edit_btn } = this.DOM.buttons;
-		
-		const $saveEdit = document.getElementById('saveEdit'); 
-		const $editFields = Validator.getEditFields(); // get the edit fields
-
-		Listeners.set(edit_btn, () => Validator.configureEditModal(this.props, $saveEdit, $editFields));
-		Listeners.set($saveEdit, editThisBook);
-
-
-		function editThisBook(evt) {
-			const $boxMsg = document.getElementById('editMessage');
-			const valuesState = Validator.getValidsInputs($editFields); 
-
-			if(Validator.validateEditInputs(valuesState)) {
-				const editedValues = Validator.defineObj($editFields, true);		
-				const { id }  = bookProps;  
-
-				_this.setProps(editedValues);
-
-				dbScope.editOne(_this.getProps(), id);
-
-			}else {
-				const $wrongInputs = Validator.wrongInputsRef(valuesState, $editFields);
-				let wrongInputsCount = Object.keys($wrongInputs).length;
-
-				Utils.changeBoxMsg($boxMsg, Utils.messages().wrongFields, 'danger');
-				Utils.changeInputColor($wrongInputs);
-
-				for(let key in $wrongInputs)
-						Listeners.set($wrongInputs[key], showWrongInputs, 'focus');
-
-				function showWrongInputs(evt) {
-					//Manage the wrong inputs when clicked remove the red color
-					evt.target.style.background = 'transparent';
-					wrongInputsCount--;
-					if(wrongInputsCount <= 0){
-						wrongInputsCount = 0;
-						Utils.changeBoxMsg($boxMsg, Utils.messages().default, 'primary');
-					}
-					Listeners.remove(evt.target, showWrongInputs, 'focus');	
-				}	
-			}
-		}
-
 		return this;
 	}
 
 	//Set event to delete method
 	attachDeleteEvent() {
+		
 		return this;
 	}
 
@@ -95,11 +50,11 @@ class Book {
 
 
 		const content = `
-			<td>${ livro }</td>
-			<td>${ publicacao }</td>
-			<td>${ autor }</td>
-			<td>${ editora }</td>
-			<td>${ ISBN }</td>
+			<td id="e_Livro${ id }">${ livro }</td>
+			<td id="e_publicacao${ id }"> ${ publicacao }</td>
+			<td id="e_autor${ id }">${ autor }</td>
+			<td id="e_editora${ id }">${ editora }</td>
+			<td id="e_ISBN${ id }">${ ISBN }</td>
 			<td><button id="${ edit_btn }" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#editModal">Editar</button></td>
 			<td><button id="${ delete_btn }" class="btn btn-sm btn-danger">Deletar</button></td>
 		`;

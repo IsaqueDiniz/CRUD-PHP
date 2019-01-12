@@ -1,11 +1,11 @@
 {
-  "name": "CRUD-PHP",
+  "name": "crud-php",
   "version": "1.0.0",
   "description": "A simple full-stack appication to manipulate a list of books",
   "main": "index.js",
   "scripts": {
-    "build" : "webpack",
-    "watch" : "webpack --watch"
+    "build": "webpack",
+    "watch": "webpack --watch"
   },
   "repository": {
     "type": "git",

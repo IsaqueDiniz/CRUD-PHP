@@ -14,13 +14,10 @@ class dbScope {
 		return Books;
 	}
 
-	static pushOne(one) {
-		Books.push(one);
+	static pushOne(bookObj) {
+		Books.push(bookObj);
 	}
 
-	static editOne(one, id) {
-		Books.forEach(element => console.log(element));
-	}
 
 }
 

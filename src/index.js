@@ -21,7 +21,6 @@ const Main = (function() {
 		const $addFields = Validator.getAddFields(); // take the inputs
 		const valuesState = Validator.getValidsInputs($addFields); // state of the inputs
 
-
 		if(Validator.validateAddInputs(valuesState)) {
 			const values = Validator.defineObj($addFields, false);
 			const book = new Book(values);
