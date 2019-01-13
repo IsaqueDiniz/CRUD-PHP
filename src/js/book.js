@@ -35,7 +35,22 @@ class Book {
 
 	//Set event to delete method
 	attachDeleteEvent() {
-		
+		const { delete_btn } = this.DOM.buttons;
+		const { id, livro } = this.props;
+		const $table = document.getElementById('bodyTable');
+
+		Listeners.set(delete_btn, function attach(evt) {
+			const msg = `Deseje excluir ${ livro } permanentemente? `;
+
+			Utils.customConfirm(msg, result => {
+				if(result) {
+					const $row = document.getElementById(id);
+					$table.removeChild($row);			
+				}
+			})
+
+		});
+
 		return this;
 	}
 
@@ -56,7 +71,7 @@ class Book {
 			<td id="e_editora${ id }">${ editora }</td>
 			<td id="e_ISBN${ id }">${ ISBN }</td>
 			<td><button id="${ edit_btn }" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#editModal">Editar</button></td>
-			<td><button id="${ delete_btn }" class="btn btn-sm btn-danger">Deletar</button></td>
+			<td><button id="${ delete_btn }" class="btn btn-sm btn-danger" data-id="${ id }">Deletar</button></td>
 		`;
 
 		$row.innerHTML = content;
@@ -78,6 +93,7 @@ class Book {
 		const id = String(Date.now()).split('').reverse().join('').slice(0, 5);		
 		return id;
 	}	
+
 
 }
 

@@ -38,17 +38,76 @@ class Utils {
 			refObj[key].value = '';			
 	}
 
-	// static removeWhiteSpaces(_string){
-	// 	while ()
-	// 	return value
-	// }
-
 	static changeInputColor(inputsRef, c){
 	 // change de color of the inputs
 		const color = c || '#FFE1E1'
 
 		for(let key in inputsRef) {
 				inputsRef[key].style.background = color;
+		}
+	}
+
+	static customConfirm(message, callback) {
+		let result; 
+
+		const $template = `
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header d-flex justify-content-between p-3"">
+							<h5 class="modal-title">Confirmação</h4>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+         				 <span aria-hidden="true">&times;</span>
+							  </button>
+						</div>
+						<div class="modal-header">
+							${ message }				
+						</div>
+						<div class="modal-footer">
+							 <button id="cancelBTN" type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+			         <button id="confirmBTN" type="button" class="btn btn-danger">Confirmar</button>
+						</div>
+					</div>
+				</div>
+		`;
+
+		const $modal = document.createElement('section');
+					$modal.id = 'confirmModal';
+					$modal.classList.add('modal', 'fade');
+					$modal.setAttribute('tabindex', '-1');
+					$modal.setAttribute('role', 'dialog');
+					$modal.setAttribute('aria-labelledby', 'confirmModal');
+					$modal.setAttribute('aria-hidden', 'true');
+					
+					$modal.innerHTML = $template;
+
+		document.body.appendChild($modal);	
+		$('#confirmModal').modal('show');		
+
+		$('#confirmModal').on('hidden.bs.modal', () => {
+			$confirm.removeEventListener('click', setTrue);
+			$cancel.removeEventListener('click', setFalse);
+			
+			console.log('Event has happened...');
+
+			document.body.removeChild(document.getElementById('confirmModal'));		
+		})
+
+		const $confirm = document.getElementById('confirmBTN');							
+		const $cancel = document.getElementById('cancelBTN');
+
+		$confirm.addEventListener('click', setTrue);
+		$cancel.addEventListener('click', setFalse);
+
+		function setTrue(evt) {
+			callback(true);
+			$('#confirmModal').modal('hide');
+			evt.stopPropagation($modal);
+		}
+
+		function setFalse(evt) {
+			callback(false);
+			$('#confirmModal').modal('hide');
+			evt.stopPropagation();
 		}
 	}
 

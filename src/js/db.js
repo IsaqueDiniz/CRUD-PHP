@@ -18,7 +18,9 @@ class dbScope {
 		Books.push(bookObj);
 	}
 
-
+	static deleteOne(bookId) {
+		
+	}
 }
 
 export default dbScope;

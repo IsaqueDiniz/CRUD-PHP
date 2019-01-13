@@ -4,8 +4,8 @@
   "description": "A simple full-stack appication to manipulate a list of books",
   "main": "index.js",
   "scripts": {
-    "build": "webpack",
-    "watch": "webpack --watch"
+    "build:prod": "webpack --mode production",
+    "watch": "webpack --watch --mode development"
   },
   "repository": {
     "type": "git",
