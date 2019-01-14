@@ -30,6 +30,28 @@ class Book {
 
 	//Set event to edit method 
 	attachEditEvent() {
+		const { edit_btn } = this.DOM.buttons;
+		const props = this.props;
+		const _this = this;
+
+			Listeners.set(edit_btn, function attach(a_evt) {
+				const $template = Book.getEditTemplate(props);
+
+				document.body.appendChild($template);
+				$('#editModal').modal('show');
+
+				$('#editModal').on('hidden.bs.modal', evt => {
+					document.body.removeChild(document.getElementById('editModal'));
+				});
+
+				Listeners.set('saveEdit', evt => {
+					alert('Edição salva!');
+				})
+
+
+			})
+
+
 		return this;
 	}
 
@@ -39,13 +61,14 @@ class Book {
 		const { id, livro } = this.props;
 		const $table = document.getElementById('bodyTable');
 
-		Listeners.set(delete_btn, function attach(evt) {
+		Listeners.set(delete_btn, function attach(a_evt) {
 			const msg = `Deseje excluir ${ livro } permanentemente? `;
 
 			Utils.customConfirm(msg, result => {
 				if(result) {
 					const $row = document.getElementById(id);
-					$table.removeChild($row);			
+					$table.removeChild($row);
+					Listeners.remove(a_evt.target, attach);			
 				}
 			})
 
@@ -89,11 +112,71 @@ class Book {
 			this.props[key] = obj[key];
 	}
 
-	setID(number) {
+	setID() {
 		const id = String(Date.now()).split('').reverse().join('').slice(0, 5);		
 		return id;
 	}	
 
+	static getEditTemplate(valuesObj) {
+
+		const { id, livro, publicacao, autor, editora, ISBN } = valuesObj;
+
+		const $template = `
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="model-header d-flex justify-content-between p-3">
+							<h5 class="modal-title" id="exampleModalLabel">Editar livro</h3>
+				        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+         					 <span aria-hidden="true">&times;</span>
+       					</button>
+						</div>	
+						<form  class="modal-body container-fluid">
+								<div class="form-group">
+									<label for="nome_livro">Nome do Livro</label>
+									<input value="${ livro }"
+										 type="text" class="form-control" placeholder="Nome do Livro" name="nome_livro" id="editLivro" required disabled> 
+								</div>
+								<div class="form-group">
+									<label for="data_public">Data de Publicação</label>
+									<input value="${ publicacao }"
+										type="date" class="form-control" placeholder="Publicação" name="data_public" id="editPublic" required disabled> 
+								</div>
+								<div class="form-group">
+									<label for="nome_autor">Nome do Autor</label>
+									<input value="${ autor }"
+										type="text" class="form-control" placeholder="Autor" name="nome_autor" id="editAutor" required disabled> 
+								</div>
+								<div class="form-group">
+									<label for="nome_editora">Editora	</label>
+									<input value="${ editora }" 
+										type="text" class="form-control"  placeholder="Editora" name="nome_editora" id="editEditora" required disabled> 
+								</div>
+								<div class="form-group">
+									<label for="ISBN">Número ISBN</label>
+									<input value="${ ISBN }" 
+										type="number" class="form-control"  placeholder="ISBN" name="ISBN" id="editISBN" required disabled> 
+								</div>
+							<div class="modal-footer">
+								<input class="btn btn-secondary" type="reset" value="Limpar">
+								<input class="btn btn-primary" type="button" id="saveEdit" value="Salvar">
+							<div>
+						</form>
+					</div>
+				</div>				
+		`;
+
+		const $modal = document.createElement('section');
+					$modal.id = 'editModal';
+					$modal.classList.add('modal', 'fade');
+					$modal.setAttribute('tabindex', '-1');
+					$modal.setAttribute('role', 'dialog');
+					$modal.setAttribute('aria-labelledby', 'editionModal');
+					$modal.setAttribute('aria-hidden', 'true');
+
+					$modal.innerHTML = $template;
+					
+		return $modal;
+	}
 
 }
 

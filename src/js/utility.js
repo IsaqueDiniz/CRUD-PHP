@@ -83,7 +83,7 @@ class Utils {
 		document.body.appendChild($modal);	
 		$('#confirmModal').modal('show');		
 
-		$('#confirmModal').on('hidden.bs.modal', () => {
+		$('#confirmModal').on('hidden.bs.modal', evt => {
 			$confirm.removeEventListener('click', setTrue);
 			$cancel.removeEventListener('click', setFalse);
 			
@@ -110,6 +110,8 @@ class Utils {
 			evt.stopPropagation();
 		}
 	}
+
+
 
 }
 
