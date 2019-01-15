@@ -18,53 +18,59 @@ const Main = (function() {
 	//Functions
 	function newBook(evt) {
 		const $boxMsg = document.getElementById('createMessage'); // take the alert box 
-		const $addFields = Validator.getAddFields(); // take the inputs
-		const valuesState = Validator.getValidsInputs($addFields); // state of the inputs
+		
+		const valuesState = Validator.getValidsInputs(); // state of the inputs
+		const $addFieldsRef = Validator.getAddFields();  // DOM reference of the inputs
+
+		Validator.resetModalWhenClose('#formModal', $boxMsg, $addFieldsRef);
 
 		if(Validator.validateAddInputs(valuesState)) {
-			const values = Validator.defineObj($addFields, false);
+			const values = Validator.defineObj($addFieldsRef, false);
 			const book = new Book(values);
-						book.create().attachEditEvent().attachDeleteEvent(); // set all configuration to the current registry
+
+			book // set all configuration to the current registry
+				.create()
+				.attachEditEvent()
+				.attachDeleteEvent(); 
+
 			dbScope.pushOne(book);
 			console.log(dbScope.getBooks());
 
 			// after added new registry, close and reset the modal
-			Utils.clearInputs($addFields);		
+			Utils.clearInputs($addFieldsRef);		
 			Utils.changeBoxMsg($boxMsg, Utils.messages().addedSuccessful, 'success');
 
-			setTimeout(() => { 
-				$('#formModal').modal('toggle');
-					Utils.changeBoxMsg($boxMsg, Utils.messages().default, 'primary');
-			}, 600);
+			Utils.closeWithDelay('#formModal', $boxMsg);
 
 		}	else {
-			const $wrongInputs = Validator.wrongInputsRef(valuesState, $addFields); // obj with DOM reference from wrong fields
+			const $wrongInputs = Validator.wrongInputsRef(valuesState, $addFieldsRef); // obj with DOM reference from wrong fields
 			let wrongInputsCount = Object.keys($wrongInputs).length; // number of wrong inputs
 
 			Utils.changeBoxMsg($boxMsg, Utils.messages().wrongFields, 'danger'); 
 			Utils.changeInputColor($wrongInputs);
 
-			for(let key in $wrongInputs) 
-				Listeners.set($wrongInputs[key], showWrongInputs, 'focus');
-
-			function showWrongInputs(evt) {
-				//Manage the wrong inputs when when clicked remove the red color
-				evt.target.style.background = 'transparent';
-				wrongInputsCount--;
-				if(wrongInputsCount <= 0 ) {
-					wrongInputsCount = 0;
-					Utils.changeBoxMsg($boxMsg, Utils.messages().default, 'primary');
-				}				
-				Listeners.remove(evt.target, showWrongInputs, 'focus');
+			for(let key in $wrongInputs) {
+				Listeners.set($wrongInputs[key], 
+					function showWrongInputs(evt) {
+						//Manage the wrong inputs when when clicked remove the red color
+						evt.target.style.background = 'transparent';
+						wrongInputsCount--;
+						if(wrongInputsCount <= 0 ) {
+							wrongInputsCount = 0;
+							Utils.changeBoxMsg($boxMsg, Utils.messages().default, 'primary');
+						}				
+						Listeners.remove(evt.target, showWrongInputs, 'focus');
+					}, 'focus');
 			}
+
 
 			$('#formModal').on('hidden.bs.modal', evt => {
 			//reset the form when hidden event dispared
-				Utils.clearInputs($addFields);
+				Utils.clearInputs($addFieldsRef);
 				Utils.changeBoxMsg($boxMsg, Utils.messages().default, 'primary');
 				wrongInputsCount = 0;
-				for(let key in $addFields)
-					$addFields[key].style.background = 'transparent';								
+				for(let key in $addFieldsRef)
+					$addFieldsRef[key].style.background = 'transparent';								
 			});
 		}
 	}

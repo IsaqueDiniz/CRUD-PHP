@@ -37,19 +37,28 @@ class Book {
 			Listeners.set(edit_btn, function attach(a_evt) {
 				const $template = Book.getEditTemplate(props);
 
-				document.body.appendChild($template);
-				$('#editModal').modal('show');
 
 				$('#editModal').on('hidden.bs.modal', evt => {
 					document.body.removeChild(document.getElementById('editModal'));
 				});
 
 				Listeners.set('saveEdit', evt => {
-					alert('Edição salva!');
-				})
+					const valuesState = Validator.getValidsInputs('edit')
 
+					if(Validator.validateEditInputs(valuesState)) {
+						const values = Validator.defineObj(Validator.getEditFields(), true);
+						
+						console.log(values);						
+					}else {
+						const $wrongInputs = Validator.wrongInputsRef(valuesState, Validator.getEditFields());
+						let wrongInputsCount = Object.keys($wrongInputs).length;
 
-			})
+						console.log($wrongInputs);								
+					}
+
+				});
+
+			});
 
 
 		return this;
@@ -64,8 +73,8 @@ class Book {
 		Listeners.set(delete_btn, function attach(a_evt) {
 			const msg = `Deseje excluir ${ livro } permanentemente? `;
 
-			Utils.customConfirm(msg, result => {
-				if(result) {
+			Utils.customConfirm(msg, confirm => { // take the result of the user click
+				if(confirm) { // manipulate the 'true' result to remove the book
 					const $row = document.getElementById(id);
 					$table.removeChild($row);
 					Listeners.remove(a_evt.target, attach);			
@@ -88,7 +97,7 @@ class Book {
 
 
 		const content = `
-			<td id="e_Livro${ id }">${ livro }</td>
+			<td id="e_livro${ id }">${ livro }</td>
 			<td id="e_publicacao${ id }"> ${ publicacao }</td>
 			<td id="e_autor${ id }">${ autor }</td>
 			<td id="e_editora${ id }">${ editora }</td>
@@ -134,30 +143,30 @@ class Book {
 								<div class="form-group">
 									<label for="nome_livro">Nome do Livro</label>
 									<input value="${ livro }"
-										 type="text" class="form-control" placeholder="Nome do Livro" name="nome_livro" id="editLivro" required disabled> 
+										 type="text" class="form-control" placeholder="Nome do Livro" name="nome_livro" id="editLivro" required> 
 								</div>
 								<div class="form-group">
 									<label for="data_public">Data de Publicação</label>
 									<input value="${ publicacao }"
-										type="date" class="form-control" placeholder="Publicação" name="data_public" id="editPublic" required disabled> 
+										type="date" class="form-control" placeholder="Publicação" name="data_public" id="editPublic" required> 
 								</div>
 								<div class="form-group">
 									<label for="nome_autor">Nome do Autor</label>
 									<input value="${ autor }"
-										type="text" class="form-control" placeholder="Autor" name="nome_autor" id="editAutor" required disabled> 
+										type="text" class="form-control" placeholder="Autor" name="nome_autor" id="editAutor" required> 
 								</div>
 								<div class="form-group">
 									<label for="nome_editora">Editora	</label>
 									<input value="${ editora }" 
-										type="text" class="form-control"  placeholder="Editora" name="nome_editora" id="editEditora" required disabled> 
+										type="text" class="form-control"  placeholder="Editora" name="nome_editora" id="editEditora" required> 
 								</div>
 								<div class="form-group">
 									<label for="ISBN">Número ISBN</label>
 									<input value="${ ISBN }" 
-										type="number" class="form-control"  placeholder="ISBN" name="ISBN" id="editISBN" required disabled> 
+										type="number" class="form-control"  placeholder="ISBN" name="ISBN" id="editISBN" required> 
 								</div>
 							<div class="modal-footer">
-								<input class="btn btn-secondary" type="reset" value="Limpar">
+								<input class="btn btn-secondary" type="reset"  value="Limpar">
 								<input class="btn btn-primary" type="button" id="saveEdit" value="Salvar">
 							<div>
 						</form>
@@ -174,7 +183,10 @@ class Book {
 					$modal.setAttribute('aria-hidden', 'true');
 
 					$modal.innerHTML = $template;
-					
+
+		document.body.appendChild($modal);
+		$('#editModal').modal('show');
+				
 		return $modal;
 	}
 

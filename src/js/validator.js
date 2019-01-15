@@ -26,7 +26,7 @@ class Validator {
 		}
 	}
 
-	static defineObj(ref, option) {
+	static defineObj(ref, option) { // define a object with the values of the inputs
 		if(option){		
 			return {
 				livro : ref.$e_livro.value,
@@ -45,19 +45,28 @@ class Validator {
 		}	
 	}
 
-	static getValidsInputs(inputs) { 
+	static getValidsInputs(option) { 
 	// take the dom references of the inputs and return the state of they, if ok(true), else(false)
-		const valids = {};
-
-		for(let key in inputs){
-			if(inputs[key].value.length > 6) {
-				valids[key] = true
-			}else {
-				valids[key] = false;
+		function makeObj(refs) {
+			const obj = {};
+			
+			for(let key in refs) {
+				if(refs[key].value.length > 6)
+					obj[key] = true;
+				else
+					obj[key] = false;
 			}
+
+			return obj;
 		}
 
-	return valids;
+		if(option === 'edit') {
+			const resultEdit = makeObj(Validator.getEditFields()); 
+			return resultEdit;
+		}else {
+			const resultAdd = makeObj(Validator.getAddFields());
+			return resultAdd;	
+		}
 	}
 
 	static validateEditInputs({ $e_livro , $e_publicacao, $e_autor, $e_editora, $e_ISBN }) { 
@@ -112,6 +121,22 @@ class Validator {
 			Utils.messages().default,
 			'primary'
 		);
+	}
+
+	static resetModalState($modal, $boxMsg, type) {
+
+
+	}
+
+	static resetModalWhenClose($modal, $msgBox, $fields) {
+
+		$($modal).on('hidden.bs.modal', evt => {
+			Utils.clearInputs($fields);
+			Utils.changeBoxMsg($msgBox, Utils.messages().default, 'primary');
+
+			for(let key in $fields)
+					$fields[key].style.background = 'transparent';
+		})
 	}
 
 }

@@ -47,10 +47,10 @@ class Utils {
 		}
 	}
 
-	static customConfirm(message, callback) {
+	static customConfirm(message, callback) { // create a modal confirm to manipulate the DELETE operation
 		let result; 
 
-		const $template = `
+		const $template = ` 
 				<div class="modal-dialog" role="document">
 					<div class="modal-content">
 						<div class="modal-header d-flex justify-content-between p-3"">
@@ -60,7 +60,7 @@ class Utils {
 							  </button>
 						</div>
 						<div class="modal-header">
-							${ message }				
+							${ message }	
 						</div>
 						<div class="modal-footer">
 							 <button id="cancelBTN" type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -70,6 +70,7 @@ class Utils {
 				</div>
 		`;
 
+		//configure the modal
 		const $modal = document.createElement('section');
 					$modal.id = 'confirmModal';
 					$modal.classList.add('modal', 'fade');
@@ -80,16 +81,16 @@ class Utils {
 					
 					$modal.innerHTML = $template;
 
-		document.body.appendChild($modal);	
+		document.body.appendChild($modal);	// add and show the modal
 		$('#confirmModal').modal('show');		
 
-		$('#confirmModal').on('hidden.bs.modal', evt => {
+		$('#confirmModal').on('hidden.bs.modal', evt => { // operations when closes the modal
 			$confirm.removeEventListener('click', setTrue);
 			$cancel.removeEventListener('click', setFalse);
 			
 			console.log('Event has happened...');
 
-			document.body.removeChild(document.getElementById('confirmModal'));		
+			document.body.removeChild(document.getElementById('confirmModal'));		//remove from the DOM
 		})
 
 		const $confirm = document.getElementById('confirmBTN');							
@@ -98,20 +99,25 @@ class Utils {
 		$confirm.addEventListener('click', setTrue);
 		$cancel.addEventListener('click', setFalse);
 
-		function setTrue(evt) {
+		function setTrue(evt) { // pass true to callback
 			callback(true);
 			$('#confirmModal').modal('hide');
 			evt.stopPropagation($modal);
 		}
 
-		function setFalse(evt) {
+		function setFalse(evt) { //pass false to callback
 			callback(false);
 			$('#confirmModal').modal('hide');
 			evt.stopPropagation();
 		}
 	}
 
-
+	static closeWithDelay($reference, $box) {
+		setTimeout(() => { 
+			$($reference).modal('toggle');
+				Utils.changeBoxMsg($box, Utils.messages().default, 'primary');
+		}, 600);		
+	}
 
 }
 
