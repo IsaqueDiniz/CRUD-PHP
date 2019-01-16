@@ -119,6 +119,10 @@ class Utils {
 		}, 600);		
 	}
 
+	static removeWhiteSpaces(str){
+		return str.replace(/\s/g, '');
+	}
+
 }
 
 export default Utils;

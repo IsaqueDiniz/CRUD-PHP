@@ -19,7 +19,7 @@ class Book {
 		};
 		//take and set the dom references
 		this.DOM = {
-			rowID : this.props.id,
+			rowID : Utils.removeWhiteSpaces(this.props.livro) + this.props.id,
 			buttons : {
 				edit_btn : `edit_${this.props.livro}`,
 				delete_btn : `delete_${this.props.livro}`,
@@ -67,6 +67,7 @@ class Book {
 	attachDeleteEvent() {
 		const { delete_btn } = this.DOM.buttons;
 		const { id, livro } = this.props;
+		const { rowID } = this.DOM;
 		const $table = document.getElementById('bodyTable');
 
 		Listeners.set(delete_btn, function attach(a_evt) {
@@ -74,7 +75,7 @@ class Book {
 
 			Utils.customConfirm(msg, confirm => { // take the result of the user click
 				if(confirm) { // manipulate the 'true' result to remove the book
-					const $row = document.getElementById(id);
+					const $row = document.getElementById(rowID);
 					$table.removeChild($row);
 					Listeners.remove(a_evt.target, attach);			
 					dbScope.deleteOne(id);
@@ -92,9 +93,11 @@ class Book {
 		
 		const { edit_btn, delete_btn } = this.DOM.buttons;
 		
+		const { rowID } = this.DOM;
+
 		const $parent = document.getElementById('bodyTable');
 		const $row = document.createElement('tr');
-					$row.id = id;
+					$row.id = rowID;
 
 
 		const content = `
@@ -127,9 +130,7 @@ class Book {
 		return id;
 	}	
 
-	static getEditTemplate(valuesObj) {
-
-		const { id, livro, publicacao, autor, editora, ISBN } = valuesObj;
+	static getEditTemplate({ id, livro, publicacao, autor, editora, ISBN }) {
 
 		const $template = `
 				<div class="modal-dialog" role="document">
