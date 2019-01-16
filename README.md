@@ -6,8 +6,8 @@
 
 ##### Technologies used in this project: 
 	
-	* HTML
-	* CSS ( Bootstrap )
-	* Javascript
-	* PHP
-	* MySql
+..* HTML
+..* CSS ( Bootstrap )
+..* Javascript
+..* PHP
+..* MySql
