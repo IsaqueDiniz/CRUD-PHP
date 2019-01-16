@@ -1,3 +1,13 @@
 # Create, Read, Update and Delete
 
-### A simple web application allowing to management a book list
+### Simple web application allowing to management a book list
+
+***
+
+##### Technologies used in this project: 
+	
+	* HTML
+	* CSS ( Bootstrap )
+	* Javascript
+	* PHP
+	* MySql
