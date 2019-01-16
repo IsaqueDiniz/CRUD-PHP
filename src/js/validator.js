@@ -1,6 +1,7 @@
 "use strict";
 
 import Utils from './utility.js';
+import Listeners from './listeners.js';
 
 class Validator {
 
@@ -137,6 +138,25 @@ class Validator {
 			for(let key in $fields)
 					$fields[key].style.background = 'transparent';
 		})
+	}
+
+	static wrongInputsWhenFocus($inputs, c, $msgBox) {
+		let count = c;
+
+		for(let propKey in $inputs) {
+			Listeners.set($inputs[propKey],
+				function attach(evt) {
+					evt.target.style.background = 'transparent';
+					count--;
+
+					if(count <= 0) {
+						count = 0;
+						Utils.changeBoxMsg($msgBox, Utils.messages().default, 'primary');
+					}
+					Listeners.remove(evt.target, attach, 'focus');
+				}				
+			,'focus');
+		}
 	}
 
 }
