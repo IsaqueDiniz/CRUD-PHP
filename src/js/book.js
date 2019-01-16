@@ -60,8 +60,7 @@ class Book {
 
 			});
 
-
-		return this;
+	return this;
 	}
 
 	//Set event to delete method
@@ -78,12 +77,14 @@ class Book {
 					const $row = document.getElementById(id);
 					$table.removeChild($row);
 					Listeners.remove(a_evt.target, attach);			
+					dbScope.deleteOne(id);
+					console.log(dbScope.getBooks());
 				}
 			})
 
 		});
 
-		return this;
+	return this;
 	}
 
 	create() {
@@ -109,7 +110,7 @@ class Book {
 		$row.innerHTML = content;
 		$parent.appendChild($row);
 
-		return this;
+	return this;
 	}
 
 	getProps() {
@@ -187,7 +188,7 @@ class Book {
 		document.body.appendChild($modal);
 		$('#editModal').modal('show');
 				
-		return $modal;
+	return $modal;
 	}
 
 }

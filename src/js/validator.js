@@ -89,7 +89,7 @@ class Validator {
 			 $a_autor === true && $a_editora === true && $a_ISBN === true)
 			result = true;
 
-		return result;
+	return result;
 	}
 
 	static wrongInputsRef(state, ref) {
@@ -102,7 +102,7 @@ class Validator {
 			}
 		}
 
-		return obj;
+	return obj;
 	}
 
 	static configureEditModal(props, $saveBTN, fields) {
@@ -122,11 +122,6 @@ class Validator {
 			Utils.messages().default,
 			'primary'
 		);
-	}
-
-	static resetModalState($modal, $boxMsg, type) {
-
-
 	}
 
 	static resetModalWhenClose($modal, $msgBox, $fields) {

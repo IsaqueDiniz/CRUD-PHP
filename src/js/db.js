@@ -19,7 +19,8 @@ class dbScope {
 	}
 
 	static deleteOne(bookId) {
-		
+		Books = Books.filter(current => current.props.id !== bookId )
+
 	}
 }
 
