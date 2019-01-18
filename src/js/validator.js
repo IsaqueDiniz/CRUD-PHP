@@ -154,6 +154,10 @@ class Validator {
 		}
 	}
 
+	static updateRowFields() {
+
+	}
+
 }
 
 export default Validator;

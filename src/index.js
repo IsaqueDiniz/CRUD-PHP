@@ -8,7 +8,7 @@ import dbScope from './js/db.js'; // Scope to all books
 
 const Main = (function() {
 	// Main scope
-	console.log(Utils.removeWhiteSpaces(' isa q u e'));
+
 	//Listeners
 	Listeners.set('newBookBTN', newBook);
 
@@ -26,7 +26,7 @@ const Main = (function() {
 			const book = new Book(values);
 
 			book // set all configuration to the current registry
-				.create()
+				.createBook()
 				.attachEditEvent()
 				.attachDeleteEvent(); 
 
@@ -44,7 +44,6 @@ const Main = (function() {
 
 			Utils.changeBoxMsg($msgBox, Utils.messages().wrongFields, 'danger'); 
 			Utils.changeInputColor($wrongInputs);
-
 			Validator.wrongInputsWhenFocus($wrongInputs, wrongInputsCount, $msgBox);
 
 		}

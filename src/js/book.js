@@ -24,6 +24,13 @@ class Book {
 				edit_btn : `edit_${this.props.livro}`,
 				delete_btn : `delete_${this.props.livro}`,
 				saveEdit_btn : `'saveEdit_'${this.props.livro}`
+			},
+			rowFields : {
+				$livro : `livro${this.props.id}`, 
+				$publicacao : `publicacao${this.props.id}`,
+				$autor : `autor${this.props.id}`,
+				$editora : `editora${this.props.id}`,
+				$ISBN : `ISBN${this.props.id}`
 			}
 		};
 	}
@@ -37,23 +44,38 @@ class Book {
 			Listeners.set(edit_btn, function attach(a_evt) {
 				const $template = Book.getEditTemplate(props);
 
+				Listeners.set('clearEditFields', (c_evt) => {
+					const fields = Validator.getEditFields();
+
+					for(let propKey in fields) {
+						fields[propKey].value = '';
+					}
+				})
+
 
 				$('#editModal').on('hidden.bs.modal', evt => {
 					document.body.removeChild(document.getElementById('editModal'));
 				});
 
 				Listeners.set('saveEdit', evt => {
-					const valuesState = Validator.getValidsInputs('edit')
+					const $boxMsg = document.getElementById('editMessage');
+					const valuesState = Validator.getValidsInputs('edit');
 
 					if(Validator.validateEditInputs(valuesState)) {
 						const values = Validator.defineObj(Validator.getEditFields(), true);
 						
+
+
 						console.log(values);						
 					}else {
 						const $wrongInputs = Validator.wrongInputsRef(valuesState, Validator.getEditFields());
 						let wrongInputsCount = Object.keys($wrongInputs).length;
 
-						console.log($wrongInputs);								
+						Utils.changeBoxMsg($boxMsg, Utils.messages().wrongFields, 'danger');
+						Utils.changeInputColor($wrongInputs);
+						Validator.wrongInputsWhenFocus($wrongInputs, wrongInputsCount, $boxMsg);
+
+						console.log(`Campos errados: ${$wrongInputs}`);								
 					}
 
 				});
@@ -71,7 +93,7 @@ class Book {
 		const $table = document.getElementById('bodyTable');
 
 		Listeners.set(delete_btn, function attach(a_evt) {
-			const msg = `Deseje excluir ${ livro } permanentemente? `;
+			const msg = `Deseja excluir ${ livro } de forma PERMANENTE? `;
 
 			Utils.customConfirm(msg, confirm => { // take the result of the user click
 				if(confirm) { // manipulate the 'true' result to remove the book
@@ -88,12 +110,14 @@ class Book {
 	return this;
 	}
 
-	create() {
+	createBook() {
 		const { id, livro, publicacao, autor, editora, ISBN } = this.props;
 		
 		const { edit_btn, delete_btn } = this.DOM.buttons;
 		
 		const { rowID } = this.DOM;
+
+		const { $livro, $publicacao, $autor, $editora, $ISBN } = this.DOM.rowFields;
 
 		const $parent = document.getElementById('bodyTable');
 		const $row = document.createElement('tr');
@@ -101,11 +125,11 @@ class Book {
 
 
 		const content = `
-			<td id="e_livro${ id }">${ livro }</td>
-			<td id="e_publicacao${ id }"> ${ publicacao }</td>
-			<td id="e_autor${ id }">${ autor }</td>
-			<td id="e_editora${ id }">${ editora }</td>
-			<td id="e_ISBN${ id }">${ ISBN }</td>
+			<td id="${ $livro }">${ livro }</td>
+			<td id="${ $publicacao }"> ${ publicacao }</td>
+			<td id="${ $autor }">${ autor }</td>
+			<td id="${ $editora }">${ editora }</td>
+			<td id="${ $ISBN }">${ ISBN }</td>
 			<td><button id="${ edit_btn }" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#editModal">Editar</button></td>
 			<td><button id="${ delete_btn }" class="btn btn-sm btn-danger" data-id="${ id }">Deletar</button></td>
 		`;
@@ -142,6 +166,11 @@ class Book {
        					</button>
 						</div>	
 						<form  class="modal-body container-fluid">
+							<small>
+	   						<div class="alert text-center alert-primary" role="alert" id="editMessage">
+	   							Edite todos os campos abaixo com no mínimo 7 caracteres:
+	   						</div>
+							</small>
 								<div class="form-group">
 									<label for="nome_livro">Nome do Livro</label>
 									<input value="${ livro }"
@@ -168,7 +197,7 @@ class Book {
 										type="number" class="form-control"  placeholder="ISBN" name="ISBN" id="editISBN" required> 
 								</div>
 							<div class="modal-footer">
-								<input class="btn btn-secondary" type="reset"  value="Limpar">
+								<input class="btn btn-secondary" type="button" id="clearEditFields" value="Limpar">
 								<input class="btn btn-primary" type="button" id="saveEdit" value="Salvar">
 							<div>
 						</form>
