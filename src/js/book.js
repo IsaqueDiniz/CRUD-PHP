@@ -44,7 +44,7 @@ class Book {
 			Listeners.set(edit_btn, function attach(a_evt) {
 				const $template = Book.getEditTemplate(_thisBook.props);
 
-				Book.utilsEditModal();
+				Book.utilEditModal();
 
 				Listeners.set('saveEdit', evt => {
 					const $msgBox = document.getElementById('editMessage');
@@ -203,7 +203,7 @@ class Book {
 
 		const $modal = document.createElement('section');
 					$modal.id = 'editModal';
-					$modal.classList.add('modal');
+					$modal.classList.add('modal', 'fade');
 					$modal.setAttribute('tabindex', '-1');
 					$modal.setAttribute('role', 'dialog');
 					$modal.setAttribute('aria-labelledby', 'editionModal');
@@ -229,8 +229,8 @@ class Book {
 
 	}
 
-	static Utils() {
-		Listeners.set('clearEditFields', () => {
+	static utilEditModal() {
+		Listeners.set('clearEditFields', (c_evt) => {
 			const fields = Validator.getEditFields();
 
 			for(let propKey in fields) {
@@ -240,9 +240,8 @@ class Book {
 
 		$('#editModal').on('hidden.bs.modal', evt => {
 			document.body.removeChild(document.getElementById('editModal'));
-		});		
+		});
 	}
-
 
 
 }

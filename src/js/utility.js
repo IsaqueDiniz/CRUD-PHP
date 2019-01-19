@@ -73,7 +73,7 @@ class Utils {
 		//configure the modal
 		const $modal = document.createElement('section');
 					$modal.id = 'confirmModal';
-					$modal.classList.add('modal');
+					$modal.classList.add('modal', 'fade');
 					$modal.setAttribute('tabindex', '-1');
 					$modal.setAttribute('role', 'dialog');
 					$modal.setAttribute('aria-labelledby', 'confirmModal');
