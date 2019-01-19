@@ -203,7 +203,7 @@ class Book {
 
 		const $modal = document.createElement('section');
 					$modal.id = 'editModal';
-					$modal.classList.add('modal', 'fade');
+					$modal.classList.add('modal');
 					$modal.setAttribute('tabindex', '-1');
 					$modal.setAttribute('role', 'dialog');
 					$modal.setAttribute('aria-labelledby', 'editionModal');
@@ -229,7 +229,7 @@ class Book {
 
 	}
 
-	static clearEditFields() {
+	static Utils() {
 		Listeners.set('clearEditFields', () => {
 			const fields = Validator.getEditFields();
 
