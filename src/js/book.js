@@ -38,44 +38,40 @@ class Book {
 	//Set event to edit method 
 	attachEditEvent() {
 		const { edit_btn } = this.DOM.buttons;
-		const props = this.props;
-		const _this = this;
+		const { id } = this.props;
+		const _thisBook = this;
 
 			Listeners.set(edit_btn, function attach(a_evt) {
-				const $template = Book.getEditTemplate(props);
+				const $template = Book.getEditTemplate(_thisBook.props);
 
-				Listeners.set('clearEditFields', (c_evt) => {
-					const fields = Validator.getEditFields();
-
-					for(let propKey in fields) {
-						fields[propKey].value = '';
-					}
-				})
-
-
-				$('#editModal').on('hidden.bs.modal', evt => {
-					document.body.removeChild(document.getElementById('editModal'));
-				});
+				Book.utilsEditModal();
 
 				Listeners.set('saveEdit', evt => {
-					const $boxMsg = document.getElementById('editMessage');
+					const $msgBox = document.getElementById('editMessage');
 					const valuesState = Validator.getValidsInputs('edit');
 
 					if(Validator.validateEditInputs(valuesState)) {
 						const values = Validator.defineObj(Validator.getEditFields(), true);
 						
+						dbScope.editBook(values, _thisBook.props.id);						
+
+						console.log(dbScope.getBooks());
+
+						Utils.changeBoxMsg($msgBox, Utils.messages().success, 'success');
+						Utils.closeWithDelay(document.getElementById('editModal'));
+
+						Book.updateRowFields(_thisBook.props, _thisBook.DOM.rowFields);													
 
 
-						console.log(values);						
 					}else {
 						const $wrongInputs = Validator.wrongInputsRef(valuesState, Validator.getEditFields());
 						let wrongInputsCount = Object.keys($wrongInputs).length;
 
-						Utils.changeBoxMsg($boxMsg, Utils.messages().wrongFields, 'danger');
+						Utils.changeBoxMsg($msgBox, Utils.messages().wrongFields, 'danger');
 						Utils.changeInputColor($wrongInputs);
-						Validator.wrongInputsWhenFocus($wrongInputs, wrongInputsCount, $boxMsg);
+						Validator.wrongInputsWhenFocus($wrongInputs, wrongInputsCount, $msgBox);
 
-						console.log(`Campos errados: ${$wrongInputs}`);								
+						console.log(`Campos errados: ${ $wrongInputs }`);								
 					}
 
 				});
@@ -220,6 +216,34 @@ class Book {
 				
 	return $modal;
 	}
+
+	static updateRowFields(props, rowFields) {
+
+		const { $livro, $publicacao, $autor, $editora, $ISBN } = rowFields;
+
+		document.getElementById($livro).textContent = props.livro;
+		document.getElementById($publicacao).textContent = props.publicacao;
+		document.getElementById($autor).textContent = props.autor;
+		document.getElementById($editora).textContent = props.editora;
+		document.getElementById($ISBN).textContent = props.ISBN;
+
+	}
+
+	static clearEditFields() {
+		Listeners.set('clearEditFields', () => {
+			const fields = Validator.getEditFields();
+
+			for(let propKey in fields) {
+				fields[propKey].value = '';
+			}
+		});
+
+		$('#editModal').on('hidden.bs.modal', evt => {
+			document.body.removeChild(document.getElementById('editModal'));
+		});		
+	}
+
+
 
 }
 

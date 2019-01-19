@@ -35,7 +35,7 @@ const Main = (function() {
 
 			// after added new registry, close and reset the modal
 				Utils.clearInputs($addFieldsRef);		
-				Utils.changeBoxMsg($msgBox, Utils.messages().addedSuccessful, 'success');
+				Utils.changeBoxMsg($msgBox, Utils.messages().success, 'success');
 				Utils.closeWithDelay('#formModal', $msgBox);
 
 		}	else {

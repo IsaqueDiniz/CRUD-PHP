@@ -22,6 +22,20 @@ class dbScope {
 		Books = Books.filter(current => current.props.id !== bookId )
 
 	}
+
+	static editBook(props, id) {
+		Books.forEach(current => {
+			if(current.props.id === id) {
+			
+				for(let key in current.props) {
+					current.props[key] = props[key];
+				}
+				
+				current.props.id = id;
+			}
+		});
+	}
+
 }
 
 export default dbScope;

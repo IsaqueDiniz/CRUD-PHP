@@ -6,7 +6,7 @@ class Utils {
 		return {
 			wrongFields : 'Preencha os campos em vermelho corretamente:',
 			okAlert : 'Todos os campos estão corretos!',
-			addedSuccessful : 'Adicionado com sucesso',
+			success : 'Adicionado com sucesso',
 			default : 'Preencha todos os campos abaixo com no mínimo 7 caracteres'
 		}
 	}
@@ -115,7 +115,7 @@ class Utils {
 	static closeWithDelay($reference, $box) {
 		setTimeout(() => { 
 			$($reference).modal('toggle');
-				Utils.changeBoxMsg($box, Utils.messages().default, 'primary');
+				if($box) Utils.changeBoxMsg($box, Utils.messages().default, 'primary');
 		}, 600);		
 	}
 
