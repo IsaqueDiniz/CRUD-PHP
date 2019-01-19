@@ -1,5 +1,7 @@
 "use strict";
-
+////////////////////////////////////////////////////////////
+// Set a class of methods with abastraction off utilities /
+/////////////////////////////////////////////////////////
 class Utils {
 
 	static messages() { // utilities messages
@@ -112,7 +114,8 @@ class Utils {
 		}
 	}
 
-	static closeWithDelay($reference, $box) {
+	static closeWithDelay($reference, $box, d) {
+		const delay = d || 600 
 		setTimeout(() => { 
 			$($reference).modal('toggle');
 				if($box) Utils.changeBoxMsg($box, Utils.messages().default, 'primary');

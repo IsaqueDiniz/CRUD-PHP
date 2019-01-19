@@ -1,5 +1,9 @@
 "use strict";
 
+//////////////////////////////////////
+// THE MAIN FILE TO CONTROL THE APP /
+///////////////////////////////////
+
 import Book from './js/book.js'; // Book class
 import Listeners from './js/listeners.js'; // Listeners
 import Validator from './js/validator.js'; // Validators
@@ -23,15 +27,13 @@ const Main = (function() {
 
 		if(Validator.validateAddInputs(valuesState)) {
 			const values = Validator.defineObj($addFieldsRef, false);
-			const book = new Book(values);
-
-			book // set all configuration to the current registry
-				.createBook()
-				.attachEditEvent()
-				.attachDeleteEvent(); 
+			const book = new Book(values); // create a new book
+						book // set all configuration to the current registry
+							.createBook()
+							.attachEditEvent()
+							.attachDeleteEvent(); 
 
 			dbScope.pushOne(book);
-			console.log(dbScope.getBooks());
 
 			// after added new registry, close and reset the modal
 				Utils.clearInputs($addFieldsRef);		
@@ -42,6 +44,7 @@ const Main = (function() {
 			const $wrongInputs = Validator.wrongInputsRef(valuesState, $addFieldsRef); // obj with DOM reference from wrong fields
 			let wrongInputsCount = Object.keys($wrongInputs).length; // number of wrong inputs
 
+			//manipulate the wrong fields
 			Utils.changeBoxMsg($msgBox, Utils.messages().wrongFields, 'danger'); 
 			Utils.changeInputColor($wrongInputs);
 			Validator.wrongInputsWhenFocus($wrongInputs, wrongInputsCount, $msgBox);

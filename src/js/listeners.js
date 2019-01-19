@@ -1,4 +1,6 @@
 "use strict";
+/////////////////////////////////////////////
+// A SIMPLE CLASS WITH Event Handlers methods
 
 class Listeners {
 

@@ -106,7 +106,7 @@ class Validator {
 	}
 
 	static resetModalWhenClose($modal, $msgBox, $fields) {
-
+		//take the modal DOM reference and set the event handler to reset that when has been closed
 		$($modal).on('hidden.bs.modal', evt => {
 			Utils.clearInputs($fields);
 			Utils.changeBoxMsg($msgBox, Utils.messages().default, 'primary');
@@ -117,6 +117,7 @@ class Validator {
 	}
 
 	static wrongInputsWhenFocus($inputs, c, $msgBox) {
+		//When a wrong inputs gets a user focus, the red color of that has been removed
 		let count = c;
 
 		for(let propKey in $inputs) {
@@ -124,7 +125,6 @@ class Validator {
 				function attach(evt) {
 					evt.target.style.background = 'transparent';
 					count--;
-
 					if(count <= 0) {
 						count = 0;
 						Utils.changeBoxMsg($msgBox, Utils.messages().default, 'primary');

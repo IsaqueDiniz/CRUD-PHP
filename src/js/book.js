@@ -44,7 +44,7 @@ class Book {
 			Listeners.set(edit_btn, function attach(a_evt) {
 				const $template = Book.getEditTemplate(_thisBook.props);
 
-				Book.utilEditModal();
+				Book.utilEvents();
 
 				Listeners.set('saveEdit', evt => {
 					const $msgBox = document.getElementById('editMessage');
@@ -151,7 +151,7 @@ class Book {
 	}	
 
 	static getEditTemplate({ id, livro, publicacao, autor, editora, ISBN }) {
-
+		// set and return a edit modal with the props off current book
 		const $template = `
 				<div class="modal-dialog" role="document">
 					<div class="modal-content">
@@ -200,7 +200,7 @@ class Book {
 					</div>
 				</div>				
 		`;
-
+		// set attributes of this modal
 		const $modal = document.createElement('section');
 					$modal.id = 'editModal';
 					$modal.classList.add('modal', 'fade');
@@ -210,15 +210,15 @@ class Book {
 					$modal.setAttribute('aria-hidden', 'true');
 
 					$modal.innerHTML = $template;
-
+		//include in the DOMM
 		document.body.appendChild($modal);
 		$('#editModal').modal('show');
 				
-	return $modal;
+	return $modal; 
 	}
 
 	static updateRowFields(props, rowFields) {
-
+		
 		const { $livro, $publicacao, $autor, $editora, $ISBN } = rowFields;
 
 		document.getElementById($livro).textContent = props.livro;
@@ -229,7 +229,8 @@ class Book {
 
 	}
 
-	static utilEditModal() {
+	static utilEvents() {
+		// set Events for editModal
 		Listeners.set('clearEditFields', (c_evt) => {
 			const fields = Validator.getEditFields();
 

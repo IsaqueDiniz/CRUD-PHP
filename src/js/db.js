@@ -1,4 +1,8 @@
 "use strict";
+/////////////////////////////////////////////////////
+// THIS MODULE SET A NAMESPACE TO CONTROL///////////
+// the stage area of the transaction with server//
+////////////////////////////////////////////////
 
 let Books = [];
 
@@ -24,6 +28,7 @@ class dbScope {
 	}
 
 	static editBook(props, id) {
+		// take the book id, and edit that
 		Books.forEach(current => {
 			if(current.props.id === id) {
 			
