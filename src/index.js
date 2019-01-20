@@ -21,13 +21,13 @@ const Main = (function() {
 		const $msgBox = document.getElementById('createMessage'); // take the alert box 
 		
 		const valuesState = Validator.getValidsInputs(); // state of the inputs
-		const $addFieldsRef = Validator.getAddFields();  // DOM reference of the inputs
+		const $inputsReference = Validator.getAddFields();  // DOM reference of the inputs
 
-		Validator.resetModalWhenClose('#formModal', $msgBox, $addFieldsRef);
+		Validator.resetModalWhenClose($msgBox);
 
-		if(Validator.validateAddInputs(valuesState)) {
-			const values = Validator.defineObj($addFieldsRef, false);
-			const book = new Book(values); // create a new book
+		if(Validator.validateInputs('add', valuesState)) {
+			const propsValues = Validator.defineBookProps('add');
+			const book = new Book(propsValues); // create a new book
 						book // set all configuration to the current registry
 							.createBook()
 							.attachEditEvent()
@@ -36,19 +36,13 @@ const Main = (function() {
 			dbScope.pushOne(book);
 
 			// after added new registry, close and reset the modal
-				Utils.clearInputs($addFieldsRef);		
+				Utils.clearInputs($inputsReference);		
 				Utils.changeBoxMsg($msgBox, Utils.messages().success, 'success');
 				Utils.closeWithDelay('#formModal', $msgBox);
 
 		}	else {
-			const $wrongInputs = Validator.wrongInputsRef(valuesState, $addFieldsRef); // obj with DOM reference from wrong fields
-			let wrongInputsCount = Object.keys($wrongInputs).length; // number of wrong inputs
-
-			//manipulate the wrong fields
-			Utils.changeBoxMsg($msgBox, Utils.messages().wrongFields, 'danger'); 
-			Utils.changeInputColor($wrongInputs);
-			Validator.wrongInputsWhenFocus($wrongInputs, wrongInputsCount, $msgBox);
-
+			const $wrongInputs = Validator.wrongInputsRef(valuesState, $inputsReference); // obj with DOM reference from wrong fields
+			Validator.wrongInputsManagement($wrongInputs, $msgBox);
 		}
 	}
 

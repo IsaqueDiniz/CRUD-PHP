@@ -16,7 +16,7 @@ class Validator {
 			}
 	}
 
-	static getEditFields(){
+	static getEditFields() {
 	 // return the fields from the edit-modal
 		return {
 			$e_livro : document.getElementById('editLivro'),
@@ -27,23 +27,23 @@ class Validator {
 		}
 	}
 
-	static defineObj(ref, option) { // define a object with the values of the inputs
-		if(option){		
-			return {
-				livro : ref.$e_livro.value,
-				publicacao : ref.$e_publicacao.value,
-				autor : ref.$e_autor.value,
-				editora : ref.$e_editora.value,
-				ISBN : ref.$e_ISBN.value
-			}
-		}
+
+	static defineBookProps(operationType) {
+		let fieldsInputs;
+
+		if(operationType === 'add') fieldsInputs = Validator.getAddFields();
+		else fieldsInputs = Validator.getEditFields();
+
+		const key = Object.keys(fieldsInputs);
+
 		return {
-			livro : ref.$a_livro.value,
-			publicacao : ref.$a_publicacao.value,
-			autor : ref.$a_autor.value,
-			editora : ref.$a_editora.value,
-			ISBN : ref.$a_ISBN.value
-		}	
+			livro : fieldsInputs[ key[0] ].value,  
+			publicacao : fieldsInputs[ key[1] ].value,
+			autor : fieldsInputs[ key[2] ].value,
+			editora : fieldsInputs[ key[3] ].value,
+			ISBN : fieldsInputs[ key[4] ].value
+		}
+
 	}
 
 	static getValidsInputs(option) { 
@@ -70,26 +70,27 @@ class Validator {
 		}
 	}
 
-	static validateEditInputs({ $e_livro , $e_publicacao, $e_autor, $e_editora, $e_ISBN }) { 
-		// return true if all of the fields in the edit modal its ok
-		let result = false;
+	static validateInputs(inputType, inputs) {
+		if(inputType === 'add') {
+			const { $a_livro , $a_publicacao, $a_autor, $a_editora, $a_ISBN } = inputs ;
+			let isValid = ( 
+				$a_livro === true && $a_publicacao === true &&
+				$a_autor === true  && $a_editora === true && $a_ISBN === true
+			);
+			
+			return isValid;
+		}
 
-		if($e_livro === true && $e_publicacao === true &&
-			 $e_autor === true && $e_editora === true && $e_ISBN === true)
-			result = true;
+		if(inputType === 'edit') {
+			const { $e_livro , $e_publicacao, $e_autor, $e_editora, $e_ISBN } = inputs;
+			let isValid = ( 
+				$e_livro === true && $e_publicacao === true &&
+				$e_autor === true && $e_editora === true && $e_ISBN === true
+			);	
 
-	return result;
-	}	
+			return isValid;
+		}
 
-	static validateAddInputs({ $a_livro , $a_publicacao, $a_autor, $a_editora, $a_ISBN }) { 
-		// return true if all of the fields in the add form its ok
-		let result = false;
-
-		if($a_livro === true && $a_publicacao === true &&
-			 $a_autor === true && $a_editora === true && $a_ISBN === true)
-			result = true;
-
-	return result;
 	}
 
 	static wrongInputsRef(state, ref) {
@@ -105,9 +106,10 @@ class Validator {
 	return obj;
 	}
 
-	static resetModalWhenClose($modal, $msgBox, $fields) {
+	static resetModalWhenClose($msgBox) {
+		const $fields = Validator.getAddFields();
 		//take the modal DOM reference and set the event handler to reset that when has been closed
-		$($modal).on('hidden.bs.modal', evt => {
+		$('#formModal').on('hidden.bs.modal', evt => {
 			Utils.clearInputs($fields);
 			Utils.changeBoxMsg($msgBox, Utils.messages().default, 'primary');
 
@@ -116,21 +118,30 @@ class Validator {
 		})
 	}
 
-	static wrongInputsWhenFocus($inputs, c, $msgBox) {
+	static wrongInputsManagement($inputs, $msgBox) {
 		//When a wrong inputs gets a user focus, the red color of that has been removed
-		let count = c;
+		Utils.changeBoxMsg($msgBox, Utils.messages().wrongFields, 'danger');		
+		Utils.changeInputColor($inputs);
+		let wrongInputsCount = Object.keys($inputs).length;
 
-		for(let propKey in $inputs) {
-			Listeners.set($inputs[propKey],
-				function attach(evt) {
-					evt.target.style.background = 'transparent';
-					count--;
-					if(count <= 0) {
-						count = 0;
-						Utils.changeBoxMsg($msgBox, Utils.messages().default, 'primary');
-					}
-					Listeners.remove(evt.target, attach, 'focus');
-				}, 'focus');
+		Listeners.set('newBookBTN', () => { //removed all events in the inputs 
+			for(let key in $inputs) {
+				Listeners.remove($inputs[key], attach, 'focus');
+			}
+		} , 'click');		
+
+		for(let key in $inputs) {
+			Listeners.set($inputs[key], attach, 'focus');
+		}
+		
+		function attach(evt) { //remove the red color and reset the box msg when all inputs has been clicked
+			evt.target.style.background = 'transparent';
+			wrongInputsCount--;
+			if(wrongInputsCount <= 0) {
+				wrongInputsCount = 0;
+				Utils.changeBoxMsg($msgBox, Utils.messages().default, 'primary');
+			}
+			Listeners.remove(evt.target, attach, 'focus');
 		}
 	}
 

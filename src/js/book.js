@@ -50,27 +50,19 @@ class Book {
 					const $msgBox = document.getElementById('editMessage');
 					const valuesState = Validator.getValidsInputs('edit');
 
-					if(Validator.validateEditInputs(valuesState)) {
-						const values = Validator.defineObj(Validator.getEditFields(), true);
+					if(Validator.validateInputs('edit', valuesState)) {
+						const bookEditedProps = Validator.defineBookProps('edit');
 						
-						dbScope.editBook(values, _thisBook.props.id);						
-
-						console.log(dbScope.getBooks());
+						dbScope.editBook(bookEditedProps, id);						
 
 						Utils.changeBoxMsg($msgBox, Utils.messages().success, 'success');
-						Utils.closeWithDelay(document.getElementById('editModal'));
+						Utils.closeWithDelay(document.getElementById('editModal'), null, 1200);
 
 						Book.updateRowFields(_thisBook.props, _thisBook.DOM.rowFields);													
 
-
 					}else {
 						const $wrongInputs = Validator.wrongInputsRef(valuesState, Validator.getEditFields());
-						let wrongInputsCount = Object.keys($wrongInputs).length;
-
-						Utils.changeBoxMsg($msgBox, Utils.messages().wrongFields, 'danger');
-						Utils.changeInputColor($wrongInputs);
-						Validator.wrongInputsWhenFocus($wrongInputs, wrongInputsCount, $msgBox);
-
+						Validator.wrongInputsManagement($wrongInputs, $msgBox);
 						console.log(`Campos errados: ${ $wrongInputs }`);								
 					}
 
