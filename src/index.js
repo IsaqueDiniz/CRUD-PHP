@@ -9,9 +9,12 @@ import Listeners from './js/listeners.js'; // Listeners
 import Validator from './js/validator.js'; // Validators
 import Utils from './js/utility.js'; // Utilities
 import dbScope from './js/db.js'; // Scope to all books
+import Server  from './js/server.js'; 
 
 const Main = (function() {
 	// Main scope
+	
+	Server.getResource();	
 
 	//Listeners
 	Listeners.set('newBookBTN', newBook);
