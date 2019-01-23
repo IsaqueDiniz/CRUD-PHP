@@ -8,8 +8,6 @@ let Books = [];
 
 class dbScope {
 
-	constructor() {}
-
  	static	setBooksFromDb(arr){
 		Books = arr;
 	}

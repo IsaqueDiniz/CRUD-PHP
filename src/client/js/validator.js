@@ -37,11 +37,11 @@ class Validator {
 		const key = Object.keys(fieldsInputs);
 
 		return {
-			livro : fieldsInputs[ key[0] ].value,  
-			publicacao : fieldsInputs[ key[1] ].value,
-			autor : fieldsInputs[ key[2] ].value,
-			editora : fieldsInputs[ key[3] ].value,
-			ISBN : fieldsInputs[ key[4] ].value
+			livro : fieldsInputs[key[0]].value,  
+			publicacao : fieldsInputs[key[1]].value,
+			autor : fieldsInputs[key[2]].value,
+			editora : fieldsInputs[key[3]].value,
+			ISBN : fieldsInputs[key[4]].value
 		}
 
 	}

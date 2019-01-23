@@ -19,7 +19,7 @@ class Book {
 		};
 		//take and set the dom references
 		this.DOM = {
-			rowID : Utils.removeWhiteSpaces(this.props.livro) + this.props.id,
+			rowID : 'bookRowId' + this.props.id,
 			buttons : {
 				edit_btn : `edit_${this.props.livro}`,
 				delete_btn : `delete_${this.props.livro}`,
@@ -137,8 +137,10 @@ class Book {
 			this.props[key] = obj[key];
 	}
 
-	setID() {
-		const id = String(Date.now()).split('').reverse().join('').slice(0, 5);		
+	setID() { // return a random number UNIQUE, with 6 digits
+		const id = 
+			Math.floor(Math.random() * (999 - 100 + 1)) + 100 +
+			String(Date.now()).split('').reverse().join('').slice(0, 3);		
 		return id;
 	}	
 
