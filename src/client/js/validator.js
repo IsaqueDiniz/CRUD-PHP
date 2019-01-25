@@ -13,7 +13,7 @@ class Validator {
 				$a_autor : document.getElementById('nome_autor'),
 				$a_editora : document.getElementById('nome_editora'),
 				$a_ISBN : document.getElementById('ISBN')
-			}
+		}
 	}
 
 	static getEditFields() {
