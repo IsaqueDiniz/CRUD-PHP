@@ -4,17 +4,33 @@ class Database {
 
 	private $user = 'Isaque';
 	private $password = '1234';
-
-	public $dsn = 'mysql:host=localhost;dbname=db_BookList';
+	private $dsn = 'mysql:host=localhost;dbname=db_BookList';
 
 	function __construct() {
 		try {
 			$this->PDO = new PDO($this->dsn, $this->user, $this->password);
-			$this->PDO->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-		}catch (PDOExcepetion $error) {
-			$this->PDO = $error->getMessage();
-			die();
+		
+			$this->PDO->setAttribute(
+				PDO::ATTR_DEFAULT_FETCH_MODE,
+				PDO::FETCH_ASSOC
+			);
+			$this->PDO->setAttribute(
+				PDO::ATTR_ERRMODE,
+				PDO::ERRMODE_EXCEPETION
+			);
+
+		}catch (PDOExcepetion $e) {
+			$this->PDO = $e->getMessage();
+			exit('Ocorreu um erro'. $this->PDO);
 		}
+	}
+
+	static function getStatusOperation($ok, $statusCode, $message) {
+		return array(
+			'OK' => $ok,
+			'statusCode' => $statusCode,
+			'message' => $message
+		);
 	}
 
 	public function insertRegistry($jsonRegistry) {
@@ -48,28 +64,53 @@ class Database {
 		$statement->execute(['id' => $id]);
 	}
 
-	public function updateRegistry($registry) {
+
+	public function updateRegistry($jsonRegistry) {
 		// UPDATE one registry
+		$registry = json_decode($jsonRegistry);
+		foreach ($registry as $key => $value) {
+			$$key = $value;	
+		}
+
+		$sql = 'UPDATE Livro SET
+						livro = :livro,
+						publicacao = :publicacao,
+						autor = :autor,
+						editora = :editora,
+						ISBN = :ISBN
+						WHERE id = :id';
+
+		$statement = $this->PDO->prepare($sql);
+		$statement->execute([
+			'id' => $id,
+			'livro' => $livro,
+			'publicacao' => $publicacao,
+			'autor' => $autor,
+			'editora' => $editora,
+			'ISBN' => $ISBN
+		]);							
 	}
 
 	public function selectAllRegistry() {
 		//SELECT all 
-		$sql = 'SELECT id, livro, publicacao, autor, editora, ISBN FROM Livro';
-		$dataResult = $this->PDO->query($sql);
-		$data = json_encode($dataResult->fetchAll());
-		return $data;	
+		$sql = 'SELECT id, livro, publicacao, autor, editora, ISBN FROM Liavro';
+		
+		try {
+			$dataResult = $this->PDO->query($sql);
+			$data = json_encode($dataResult->fetchAll());
+			return $data;	
+		}catch(PDOExcepetion $error) {
+			// $errorObject = Database::getStatusOperation(false, $error->getCode(), $erros->getMessage()); 
+			$teste = $error->getCode();
+			echo $teste;
+			// print_r($error);
+		}
 	}
 
 }
 
-// '{"id":"1234567","livro":"Nome do livro","publicacao":"2019-01-25","autor":"Nome do Autor","editora":"Editora","ISBN":"1234567"}'
-
 $db = new Database();
 
-// $db->insertRegistry('{"id":"4157897","livro":"OutroLivro","publicacao":"2019-01-25","autor":"Nome do Autor","editora":"Editora","ISBN":"1234567"}');
+// print_r($db->selectAllRegistry());
 
-// $result = $db->selectAllRegistry();
-
-$db->deleteRegisty('{"id" : 4157897}');
-
-	// print_r(json_decode($result));
+$db->selectAllRegistry();
