@@ -8,10 +8,12 @@ header('Access-Control-Allow-Headers: Access-Control-Allow-Headers, Content-Type
 
 include_once './Database.php';
 
+	$db = new Database();
+
 switch($_SERVER['REQUEST_METHOD']) {
 	case 'GET' :
 		// Executes the methods to get the data
-		// echo $db->selectAllRegistry();
+		echo $db->selectAllRegistry()['data'];
 		break;
 	case 'POST' :
 		// Executes the methods to receive data

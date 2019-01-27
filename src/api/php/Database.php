@@ -2,23 +2,19 @@
 
 final class Database {
 
-	// static protected $user = 'Isaque';
-	// static protected $password = '124';
-	// static protected $dsn = 'mysql:host=127.0.0.1;dbname=db_BookList';
+	private static $user = 'Isaque';
+	private static $password = '1234';
+	private static $dsn = 'mysql:host=127.0.0.1;dbname=db_BookList';
 
-	private static function getConnection() {
-		$dsn = 'mysql:host=127.0.0.1;dbname=db_BookList';
-		$user = 'Isaque';
-		$password = '1234';
-
+	private static function getConnection() { // return a connection with MySql
 		try {
-			$PDO = new PDO($dsn, $user, $password);
+			$PDO = new PDO(self::$dsn, self::$user, self::$password);
 
 			$PDO->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 			$PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		
 		}catch(PDOException $error) {
-			return array( // return a error array
+			return array( // error array with information about that
 				'error' => true,
 				'code' => $error->getCode(),
 				'message' => $error->getMessage(),
@@ -35,7 +31,7 @@ final class Database {
 
 	public function insertRegistry($encondedRegistry) {
 		//INSERT one registry 
-		$PDO = Database::getConnection();
+		$PDO = Database::getConnection(); // connect
 
 		if($PDO['error'])	return $PDO; // error
 
@@ -44,7 +40,7 @@ final class Database {
 			$$key = $value;				
 		}
 
-		$connection = $PDO['connection'];
+		$connection = $PDO['connection']; // take the PDO object
 		$SQL = 'INSERT INTO Livro (id, livro, publicacao, autor, editora, ISBN)
 						VALUES (:id, :livro, :publicacao, :autor, :editora, :ISBN)';
 
@@ -68,7 +64,7 @@ final class Database {
 			);
 		}				
 
-		return array('queryOk' => true);	
+		return array('queryOk' => true);
 	}
 
 
@@ -78,23 +74,23 @@ final class Database {
 
 		if($PDO['error']) return $PDO;
 
-		$id = json_decode($registryId)->id;
+		$id = json_decode($encondedId)->id;
 
-		$connection = $PDO['connection'];
-		$SQL = 'DELETE FROM Livro WHERE id = :id';
+			$connection = $PDO['connection'];
+			$SQL = 'DELETE FROM Livro WHERE id = :id';
 
-		try {
-			$statement = $PDO->prepare($SQL);
-			$statement->execute(['id' => $id]); 
+			try {
+				$statement = $connection->prepare($SQL);
+				$statement->execute(['id' => $id]); 
 
-		}catch(PDOException $error) {
-			return array(
-				'queryOk' => false,
-				'code' => $error->getCode(),
-				'message' => $error->getMessage(),
-				'type' => 'Query error: DELETE'
-			);
-		}
+			}catch(PDOException $error) { //return a error array with information of a fail query
+				return array(
+					'queryOk' => false,
+					'code' => $error->getCode(),
+					'message' => $error->getMessage(),
+					'type' => 'Query error: DELETE'
+				);
+			}
 
 		return array('queryOk' => true);
 	}
@@ -128,7 +124,7 @@ final class Database {
 				'ISBN' => $ISBN	
 			]);
 
-		}catch(PDOException $error) {
+		}catch(PDOException $error) { //return a error array with information of a fail query
 			return array(
 				'queryOk' => false,
 				'code' => $error->getCode(),
@@ -154,7 +150,7 @@ final class Database {
 			$dataResult = $connection->query($SQL);
 			$data = json_encode($dataResult->fetchAll());
 
-		}catch(PDOException $error) {
+		}catch(PDOException $error) { //return a error array with information of a fail query
 			return array(
 				'queryOk' => false,
 				'code' => $error->getCode(),
@@ -163,12 +159,8 @@ final class Database {
 			);
 		}
 
-		return array('queryOK' => true, 'data' => $data);
+		return array('queryOk' => true, 'data' => $data);
 	}
 
 }
-
-$db = new Database();
-print_r($db->selectAllRegistry());
-
 ?>
