@@ -1,116 +1,174 @@
 <?php 
 
-class Database {
+final class Database {
 
-	private $user = 'Isaque';
-	private $password = '1234';
-	private $dsn = 'mysql:host=localhost;dbname=db_BookList';
+	// static protected $user = 'Isaque';
+	// static protected $password = '124';
+	// static protected $dsn = 'mysql:host=127.0.0.1;dbname=db_BookList';
 
-	function __construct() {
+	private static function getConnection() {
+		$dsn = 'mysql:host=127.0.0.1;dbname=db_BookList';
+		$user = 'Isaque';
+		$password = '1234';
+
 		try {
-			$this->PDO = new PDO($this->dsn, $this->user, $this->password);
+			$PDO = new PDO($dsn, $user, $password);
+
+			$PDO->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+			$PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		
-			$this->PDO->setAttribute(
-				PDO::ATTR_DEFAULT_FETCH_MODE,
-				PDO::FETCH_ASSOC
+		}catch(PDOException $error) {
+			return array( // return a error array
+				'error' => true,
+				'code' => $error->getCode(),
+				'message' => $error->getMessage(),
+				'type' => 'Connection Error: [FUNCTION] getConnection'
 			);
-			$this->PDO->setAttribute(
-				PDO::ATTR_ERRMODE,
-				PDO::ERRMODE_EXCEPETION
-			);
-
-		}catch (PDOExcepetion $e) {
-			$this->PDO = $e->getMessage();
-			exit('Ocorreu um erro'. $this->PDO);
 		}
-	}
 
-	static function getStatusOperation($ok, $statusCode, $message) {
 		return array(
-			'OK' => $ok,
-			'statusCode' => $statusCode,
-			'message' => $message
+			'error' => false,
+			'connection' => $PDO // PDO connection
 		);
 	}
 
-	public function insertRegistry($jsonRegistry) {
+
+	public function insertRegistry($encondedRegistry) {
 		//INSERT one registry 
-		$registry = json_decode($jsonRegistry);
+		$PDO = Database::getConnection();
+
+		if($PDO['error'])	return $PDO; // error
+
+		$registry = json_decode($encondedRegistry);
 		foreach ($registry as $key => $value) {
 			$$key = $value;				
 		}
 
-		$sql = 'INSERT INTO Livro (id, livro, publicacao, autor, editora, ISBN)
+		$connection = $PDO['connection'];
+		$SQL = 'INSERT INTO Livro (id, livro, publicacao, autor, editora, ISBN)
 						VALUES (:id, :livro, :publicacao, :autor, :editora, :ISBN)';
 
-		$statement = $this->PDO->prepare($sql);
-		$statement->execute([
-			'id' => $id,
-			'livro' => $livro,
-			'publicacao' => $publicacao,	
-			'autor' => $autor,
-			'editora' => $editora,
-			'ISBN' => $ISBN
-		]); 	
+		try {
+			$statement = $connection->prepare($SQL);
+			$statement->execute([
+				'id' => $id,
+				'livro' => $livro,
+				'publicacao' => $publicacao,
+				'autor' => $autor,
+				'editora' => $editora,
+				'ISBN' => $ISBN				
+			]);
+
+		}catch(PDOException $error) { // return a error array with information of a fail query
+			return array(
+				'queryOk' => false,
+				'code' => $error->getCode(),
+				'message' => $error->getMessage(),
+				'type' => 'Query error: INSERT INTO'
+			);
+		}				
+
+		return array('queryOk' => true);	
 	}
 
-	public function deleteRegisty($registryId) {
+
+	public function deleteRegisty($encondedId) {
 		//DELETE one registry 
+		$PDO = Database::getConnection();
+
+		if($PDO['error']) return $PDO;
+
 		$id = json_decode($registryId)->id;
 
-		$sql = 'DELETE FROM Livro WHERE id = :id';
+		$connection = $PDO['connection'];
+		$SQL = 'DELETE FROM Livro WHERE id = :id';
 
-		$statement = $this->PDO->prepare($sql);
-		$statement->execute(['id' => $id]);
+		try {
+			$statement = $PDO->prepare($SQL);
+			$statement->execute(['id' => $id]); 
+
+		}catch(PDOException $error) {
+			return array(
+				'queryOk' => false,
+				'code' => $error->getCode(),
+				'message' => $error->getMessage(),
+				'type' => 'Query error: DELETE'
+			);
+		}
+
+		return array('queryOk' => true);
 	}
 
 
 	public function updateRegistry($jsonRegistry) {
 		// UPDATE one registry
+		$PDO = Database::getConnection();
+
+		if($PDO['error']) return $PDO;
+
+		$connection = $PDO['connection'];		
+
 		$registry = json_decode($jsonRegistry);
 		foreach ($registry as $key => $value) {
 			$$key = $value;	
 		}
 
-		$sql = 'UPDATE Livro SET
-						livro = :livro,
-						publicacao = :publicacao,
-						autor = :autor,
-						editora = :editora,
-						ISBN = :ISBN
+		$SQL = 'UPDATE Livro 
+						SET livro = :livro, publicacao = :publicacao, autor = :autor, editora = :editora, ISBN = :ISBN
 						WHERE id = :id';
 
-		$statement = $this->PDO->prepare($sql);
-		$statement->execute([
-			'id' => $id,
-			'livro' => $livro,
-			'publicacao' => $publicacao,
-			'autor' => $autor,
-			'editora' => $editora,
-			'ISBN' => $ISBN
-		]);							
+		try {
+			$statement = $connection->prepare($SQL);
+			$statement->execute([
+				'id' => $id,
+				'livro' => $livro,
+				'publicacao' => $publicacao,
+				'autor' => $autor,
+				'editora' => $editora,
+				'ISBN' => $ISBN	
+			]);
+
+		}catch(PDOException $error) {
+			return array(
+				'queryOk' => false,
+				'code' => $error->getCode(),
+				'message' => $error->getMessage(),
+				'type' => 'Query error: UPDATE'
+			);
+		}
+
+		return array('queryOk' => true);				
 	}
+
 
 	public function selectAllRegistry() {
 		//SELECT all 
-		$sql = 'SELECT id, livro, publicacao, autor, editora, ISBN FROM Liavro';
+		$PDO = Database::getConnection();
+
+		if($PDO['error']) return $PDO;
+
+		$connection = $PDO['connection'];
+		$SQL = 'SELECT id, livro, publicacao, autor, editora, ISBN FROM Livro';
 		
 		try {
-			$dataResult = $this->PDO->query($sql);
+			$dataResult = $connection->query($SQL);
 			$data = json_encode($dataResult->fetchAll());
-			return $data;	
-		}catch(PDOExcepetion $error) {
-			// $errorObject = Database::getStatusOperation(false, $error->getCode(), $erros->getMessage()); 
-			$teste = $error->getCode();
-			echo $teste;
-			// print_r($error);
+
+		}catch(PDOException $error) {
+			return array(
+				'queryOk' => false,
+				'code' => $error->getCode(),
+				'message' => $error->getMessage(),
+				'type' => 'Query error: SELECT'
+			);
 		}
+
+		return array('queryOK' => true, 'data' => $data);
 	}
 
 }
 
 $db = new Database();
+print_r($db->selectAllRegistry());
 
-// print_r($db->selectAllRegistry());
-
-$db->selectAllRegistry();
+?>
