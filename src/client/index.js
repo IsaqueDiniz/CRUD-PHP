@@ -4,12 +4,12 @@
 // THE MAIN FILE TO CONTROL THE APP /
 ///////////////////////////////////
 
-import Book from './client/js/book.js'; // Book class
-import Listeners from './client/js/listeners.js'; // Listeners
-import Validator from './client/js/validator.js'; // Validators
-import Utils from './client/js/utility.js'; // Utilities
-import dbScope from './client/js/db.js'; // Scope to all books
-import Server  from './client/js/server.js'; 
+import Book from './js/book.js'; // Book class
+import Listeners from './js/listeners.js'; // Listeners
+import Validator from './js/validator.js'; // Validators
+import Utils from './js/utility.js'; // Utilities
+import dbScope from './js/db.js'; // Scope to all books
+import Server  from './js/server.js'; 
 
 const Main = (function() {
 	// Main scope
