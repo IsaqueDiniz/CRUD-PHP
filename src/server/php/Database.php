@@ -74,7 +74,7 @@ final class Database {
 
 		if($PDO['error']) return $PDO;
 
-		$id = json_decode($encondedId)->id;
+		$id = json_decode($encondedId)->id or json_decode($encondedId['id']);
 
 			$connection = $PDO['connection'];
 			$SQL = 'DELETE FROM Livro WHERE id = :id';
@@ -137,7 +137,7 @@ final class Database {
 	}
 
 
-	public function selectAllRegistry() {
+	public function getResources() {
 		//SELECT all 
 		$PDO = Database::getConnection();
 
@@ -151,7 +151,7 @@ final class Database {
 			$data = json_encode($dataResult->fetchAll());
 
 		}catch(PDOException $error) { //return a error array with information of a fail query
-			return array(
+		  return array(
 				'queryOk' => false,
 				'code' => $error->getCode(),
 				'message' => $error->getMessage(),
