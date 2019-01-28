@@ -68,13 +68,13 @@ final class Database {
 	}
 
 
-	public function deleteRegisty($encondedId) {
+	public function deleteRegistry($encondedId) {
 		//DELETE one registry 
 		$PDO = Database::getConnection();
 
 		if($PDO['error']) return $PDO;
 
-		$id = json_decode($encondedId)->id or json_decode($encondedId['id']);
+		$id = json_decode($encondedId)->id or json_decode($encondedId)['id'];
 
 			$connection = $PDO['connection'];
 			$SQL = 'DELETE FROM Livro WHERE id = :id';

@@ -63,10 +63,32 @@ function PUT() {
 
 
 function DELETE() {
+	//DELETE one registry
+  if(strcasecmp($_SERVER['CONTENT_TYPE'], 'application/json') == 0) {
+  	$json = file_get_contents("php://input");
+  	$semiParsedJSON = str_replace("'", "", $json);
+	  $db = new Database();
+	 	$deleteOperation = $db->deleteRegistry($semiParsedJSON); 	 
 
-
+	 	if(!isset($deleteOperation['error'])) {
+	 		$queryStatus = $deleteOperation['queryOk'];
+	 		if($queryStatus) {
+	 			echo 'Item has been removed: ' . $json;
+	 			http_response_code(200);
+	 		}else {
+	 			$error = json_encode($deleteOperation);
+	 			echo $error;
+	 			http_respnse_code(500);
+	 		}
+	 	}else {
+	 		$error = json_encode($deleteOperation);
+	 		echo $error;
+	 		http_response_code(500);
+	 	}
+  }else {
+  	echo 'Wrong Content-Type';
+  	http_response_code(400);
+  }
 }
-
-
 
 ?>
