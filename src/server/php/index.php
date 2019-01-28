@@ -53,12 +53,60 @@ function GET() {
 
 
 function POST() {
+	if(strcasecmp($_SERVER['CONTENT_TYPE'], 'application/json') == 0) {
+		$json = file_get_contents("php://input");
+		$semiParsedJSON = str_replace("'", "", $json);
+		$db = new Database();
+		$insertOperation = $db->insertRegistry($semiParsedJSON);
 
+		if(!isset($insertOperation['error'])) {
+			$queryStatus = $insertOperation['queryOk'];
+			if($queryStatus) {
+				echo 'Item has been created' . $json;
+				http_response_code(200);
+			}else {
+				$error = json_encode($insertOperation);
+				echo $error;
+				http_response_code(500);
+			}
+		}else {
+			$error = json_encode($insertOperation);
+			echo $error;
+			http_response_code(500);
+		}	
+	}else {
+		echo 'Wrong Content-Type';
+		http_response_code(400);
+	}
 }
 
 
 function PUT() {
-	echo 'PUT';
+	if(strcasecmp($_SERVER['CONTENT_TYPE'], 'application/json') == 0) {
+		$json = file_get_contents("php://input");
+		$semiParsedJSON = str_replace("'", "", $json);
+		$db = new Database();
+		$updateOperation = $db->updateRegistry($semiParsedJSON);
+
+		if(!isset($updateOperation['error'])) {
+			$queryStatus = $updateOperation['queryOk'];
+			if($queryStatus) {
+				echo 'Item has been updated:' . $json;
+				http_response_code(200);
+			}else {
+				$error = json_enconde($updadeOperation);
+				echo $error;
+				http_response_code(500);
+			}
+		}else {
+			$error = json_encode($updadeOperation);
+			echo $error;
+			http_response_code(500);
+		} 
+	}else {
+		echo 'Wrong Content-Type';
+		http_response_code(200);
+	}
 }
 
 
