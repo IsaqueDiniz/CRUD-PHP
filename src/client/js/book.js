@@ -3,14 +3,14 @@
 import Validator from './validator.js';
 import Listeners from './listeners.js';
 import Utils from './utility.js';
-import dbScope from './db.js';
+import Database from './database.js';
 
 class Book {
 
-	constructor({ livro, publicacao, autor, editora, ISBN }) {
+	constructor({ id, livro, publicacao, autor, editora, ISBN }) {
 		// properties for go to database
 		this.props = {
-			id : this.setID(),
+			id : id || this.setID(),
 			livro : livro,
 			publicacao : publicacao,
 			autor : autor,
@@ -53,7 +53,7 @@ class Book {
 					if(Validator.validateInputs('edit', valuesState)) {
 						const bookEditedProps = Validator.defineBookProps('edit');
 						
-						dbScope.editBook(bookEditedProps, id);						
+						Database.editBook(bookEditedProps, id);						
 
 						Utils.changeBoxMsg($msgBox, Utils.messages().success, 'success');
 						Utils.closeWithDelay(document.getElementById('editModal'), null, 1200);
@@ -88,8 +88,8 @@ class Book {
 					const $row = document.getElementById(rowID);
 					$table.removeChild($row);
 					Listeners.remove(a_evt.target, attach);			
-					dbScope.deleteOne(id);
-					console.log(dbScope.getBooks());
+					Database.deleteOne(id);
+					console.log(Database.getBooks());
 				}
 			})
 

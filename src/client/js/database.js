@@ -39,6 +39,14 @@ class dbScope {
 		});
 	}
 
+	static async getResourcesFromDb(callback) {
+		try {
+			const databaseResponse = await fetch('./src/server/php/index.php');	
+			callback(await databaseResponse.json(), databaseResponse.status, null);		
+		}catch(error) {
+			callback(null, null, error);
+		}
+	}	
 }
 
 export default dbScope;

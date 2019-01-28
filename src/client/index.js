@@ -8,11 +8,25 @@ import Book from './js/book.js'; // Book class
 import Listeners from './js/listeners.js'; // Listeners
 import Validator from './js/validator.js'; // Validators
 import Utils from './js/utility.js'; // Utilities
-import dbScope from './js/db.js'; // Scope to all books
-import Server  from './js/server.js'; 
+import Database from './js/database.js'; // Scope to all books
 
 const Main = (function() {
 	// Main scope
+	Database.getResourcesFromDb((resources, statusCode, error) => {
+		if(error) {
+			alert(`Ocorreu um erro. Tente novamente mais tarde.\n\nErro:\n${ error.name } : ${error.message}`);
+		}else {
+			resources.forEach(bookProperties => {
+				const book = new Book(bookProperties);
+					book
+						.createBook()
+						.attachEditEvent()
+						.attachDeleteEvent();
+
+				Database.pushOne(book);
+			});		
+		}
+	});
 
 	//Listeners
 	Listeners.set('newBookBTN', newBook);
@@ -34,7 +48,7 @@ const Main = (function() {
 							.attachEditEvent()
 							.attachDeleteEvent(); 
 
-			dbScope.pushOne(book);
+			Database.pushOne(book);
 
 			// after added new registry, close and reset the modal
 				Utils.clearInputs($inputsReference);		
