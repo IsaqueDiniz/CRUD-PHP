@@ -9,7 +9,8 @@ class Utils {
 			wrongFields : 'Preencha os campos em vermelho corretamente:',
 			okAlert : 'Todos os campos estão corretos!',
 			success : 'Adicionado com sucesso',
-			default : 'Preencha todos os campos abaixo com no mínimo 7 caracteres'
+			default : 'Preencha todos os campos abaixo com no mínimo 7 caracteres',
+			'databaseError' : 'Houve um erro na comunicação com o Banco de Dados'
 		}
 	}
 
@@ -102,13 +103,13 @@ class Utils {
 		$cancel.addEventListener('click', setFalse);
 
 		function setTrue(evt) { // pass true to callback
-			callback(true);
+			callback(true, 'confirmModal');
 			$('#confirmModal').modal('hide');
 			evt.stopPropagation($modal);
 		}
 
 		function setFalse(evt) { //pass false to callback
-			callback(false);
+			callback(false, 'confirmModal');
 			$('#confirmModal').modal('hide');
 			evt.stopPropagation();
 		}
@@ -124,6 +125,13 @@ class Utils {
 
 	static removeWhiteSpaces(str){
 		return str.replace(/\s/g, '');
+	}
+
+	static removeBookRow(bookRowId) {
+		const $parentBodyTable = document.getElementById('bodyTable');
+		const $childRow = document.getElementById(String(bookRowId));
+
+		$parentBodyTable.removeChild($childRow);
 	}
 
 }

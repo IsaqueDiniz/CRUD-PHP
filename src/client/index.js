@@ -14,7 +14,8 @@ const Main = (function() {
 	// Main scope
 	Database.getResourcesFromDb((resources, statusCode, error) => {
 		if(error) {
-			alert(`Ocorreu um erro. Tente novamente mais tarde.\n\nErro:\n${ error.name } : ${error.message}`);
+			alert(`Ocorreu um erro. Tente novamente mais tarde.\n\n
+				Erro\n${ error.name } : ${error.message}`);
 		}else {
 			resources.forEach(bookProperties => {
 				const book = new Book(bookProperties);
@@ -29,10 +30,10 @@ const Main = (function() {
 	});
 
 	//Listeners
-	Listeners.set('newBookBTN', newBook);
+	Listeners.set('newBookBTN', createBook);
 
 	//Functions
-	function newBook(evt) {
+	function createBook(evt) {
 		const $msgBox = document.getElementById('createMessage'); // take the alert box 
 		
 		const valuesState = Validator.getValidsInputs(); // state of the inputs
@@ -48,13 +49,20 @@ const Main = (function() {
 							.attachEditEvent()
 							.attachDeleteEvent(); 
 
-			Database.pushOne(book);
+			Database.saveBookInDatabase(book, (response, statusCode, error) => {
+				if(error) {
+					alert(`Não foi possível salvar o registro no banco de dados.\n\n
+						Erro\n${ error.name } : ${ error.message }`);
+					Utils.removeBookRow(book.props.id);
+					Utils.changeBoxMsg($msgBox, Utils.messages().databaseError, 'danger')
+				}else {
+					Utils.changeBoxMsg($msgBox, Utils.messages().success, 'success');
+				}
+			});					
 
 			// after added new registry, close and reset the modal
-				Utils.clearInputs($inputsReference);		
-				Utils.changeBoxMsg($msgBox, Utils.messages().success, 'success');
 				Utils.closeWithDelay('#formModal', $msgBox);
-
+				Utils.clearInputs($inputsReference);		
 		}	else {
 			const $wrongInputs = Validator.wrongInputsRef(valuesState, $inputsReference); // obj with DOM reference from wrong fields
 			Validator.wrongInputsManagement($wrongInputs, $msgBox);

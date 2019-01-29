@@ -83,13 +83,20 @@ class Book {
 		Listeners.set(delete_btn, function attach(a_evt) {
 			const msg = `Deseja excluir ${ livro } de forma PERMANENTE? `;
 
-			Utils.customConfirm(msg, confirm => { // take the result of the user click
+			Utils.customConfirm(msg, (confirm, modal_id) => { // take the result of the user click
 				if(confirm) { // manipulate the 'true' result to remove the book
-					const $row = document.getElementById(rowID);
-					$table.removeChild($row);
-					Listeners.remove(a_evt.target, attach);			
-					Database.deleteOne(id);
-					console.log(Database.getBooks());
+					Database.deleteFromDb(id, (response, statusCode, error) => {
+						if(error) {
+							alert(`Não foi possivel deletar esse registro.\n\nErro\n${error.name} : ${error.message}`)
+							setTimeout(()=> $('#confirmModal').modal('hide'), 600);
+						}else {
+							const $row = document.getElementById(rowID);
+							$table.removeChild($row);
+							Listeners.remove(a_evt.target, attach);			
+							Database.deleteOne(id);
+							console.log(Database.getBooks());							
+						}
+					});
 				}
 			})
 
