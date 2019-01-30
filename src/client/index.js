@@ -12,20 +12,19 @@ import Database from './js/database.js'; // Scope to all books
 
 const Main = (function() {
 	// Main scope
-	Database.getResourcesFromDb((resources, statusCode, error) => {
+	const requestOptions = { method : 'GET' };
+
+	Database.requestToDatabase(requestOptions, (error, response) => {
 		if(error) {
 			alert(`Ocorreu um erro. Tente novamente mais tarde.\n\n
-				Erro\n${ error.name } : ${error.message}`);
+				Error\n${ error.name } : ${error.message}`);			
 		}else {
-			resources.forEach(bookProperties => {
+			response.forEach(bookProperties => {
 				const book = new Book(bookProperties);
-					book
-						.createBook()
-						.attachEditEvent()
-						.attachDeleteEvent();
+							book.createBook().attachEditEvent().attachDeleteEvent();
 
-				Database.pushOne(book);
-			});		
+				Database.saveInStage(book);			
+			});
 		}
 	});
 
@@ -49,16 +48,23 @@ const Main = (function() {
 							.attachEditEvent()
 							.attachDeleteEvent(); 
 
-			Database.saveBookInDatabase(book, (response, statusCode, error) => {
+			const requestOptions = {
+				headers : { 'Content-Type' : 'application/json' },
+				method : 'POST',
+				body : JSON.stringify(book.getProps())
+			};
+
+			Database.requestToDatabase(requestOptions, (error, response) => {
 				if(error) {
-					alert(`Não foi possível salvar o registro no banco de dados.\n\n
-						Erro\n${ error.name } : ${ error.message }`);
-					Utils.removeBookRow(book.props.id);
-					Utils.changeBoxMsg($msgBox, Utils.messages().databaseError, 'danger')
+					alert(`Não foi possível salvar o registro no banco de dados.\n\nErro:${ error.name }:\n${ error.message }`);
+					Utils.removeBookRow(book.DOM.rowID);
+					Utils.changeBoxMsg($msgBox, Utils.messages().databaseError, 'danger');
+					Utils.closeWithDelay('#formModal', $msgBox, 2000);
 				}else {
 					Utils.changeBoxMsg($msgBox, Utils.messages().success, 'success');
+					Database.saveInStage(book);
 				}
-			});					
+			});
 
 			// after added new registry, close and reset the modal
 				Utils.closeWithDelay('#formModal', $msgBox);

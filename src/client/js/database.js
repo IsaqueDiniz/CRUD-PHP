@@ -1,33 +1,34 @@
 "use strict";
 /////////////////////////////////////////////////////
-// THIS MODULE SET A NAMESPACE TO CONTROL///////////
+// THIS MODULE SET A SCOPE TO CONTROL///////////
 // the stage area of the transaction with server//
 ////////////////////////////////////////////////
 
-let Books = [];
+const Stage = {
+	Books : []
+}
 
-class dbScope {
+class Database {
 
  	static	setBooksFromDb(arr){
-		Books = arr;
+		Stage.Books = arr;
 	}
 
 	static getBooks() {
-		return Books;
+		return Stage.Books;
 	}
 
-	static pushOne(bookObj) {
-		Books.push(bookObj);
+	static saveInStage(bookObj) {
+		Stage.Books.push(bookObj);
 	}
 
-	static deleteOne(bookId) {
-		Books = Books.filter(current => current.props.id !== bookId );
-
+	static deleteFromStage(bookId) {
+		Stage.Books = Stage.Books.filter(current => current.props.id !== bookId );
 	}
 
 	static editBook(props, id) {
 		// take the book id, and edit that
-		Books.forEach(current => {
+		Stage.Books.forEach(current => {
 			if(current.props.id === id) {
 			
 				for(let key in current.props) {
@@ -39,55 +40,24 @@ class dbScope {
 		});
 	}
 
-	static async getResourcesFromDb(callback) {
+	static async requestToDatabase(requestOptions, callback) {
+		const URL = './src/server/php/index.php';
 		try {
-			const databaseResponse = await fetch('./src/server/php/index.php');	
-			const jsonData = await databaseResponse.json();
-			const statusCode = databaseResponse.status;
-			const error = false;
+			const request = await fetch(URL, requestOptions);
+			const statusCode = request.status;
+			let response;
 
-			callback(jsonData, statusCode, error); // jsonData, statusCode, erroObject		
-		}catch(error) {
-			callback(null, null, error); // jsonData, statusCode, erroObject
-		}
-	}
+			if(requestOptions.method === 'GET') response = await request.json();
+			else response = await request.text();
 
-	static async deleteFromDb(bookId, callback) {
-		const options = {
-			headers : { 'Content-Type' : 'application/json' },
-			method : 'DELETE',
-			body : `{ "id" : "${Number(bookId)}" }`
-		}
-		try {
-			const deleteRequest = await fetch('./src/server/php/index.php', options);
-			const response = await deleteRequest.text();
-			const statusCode = deleteRequest.status;
-			const error = false;
+			if(statusCode != 200) throw new Error('O banco de dados rejeitou o recurso. Tente novamente.');
 
-			callback(response, statusCode, error);
-		}catch(error) {
-			callback(null, null, error);
-		}
-	}
-
-	static async saveBookInDatabase(book, callback) {
-		const options = {
-			headers : { 'Content-Type' : 'application/json' },
-			method : 'POST',
-			body : JSON.stringify(book.getProps())
-		}
-		try {
-			const createRequest = await fetch('./src/server/php/index.php', options);
-			const response = await createRequest.text();
-			const statusCode = createRequest.status;
-			const error = false;
-
-			callback(response, statusCode, error);
-		}catch(error) {
-			callback(null, null, error);
+			callback(null, response);
+		}catch(error){
+			callback(error);	
 		}
 	}
 
 }
 
-export default dbScope;
+export default Database;
