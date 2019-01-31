@@ -51,14 +51,34 @@ class Book {
 					const valuesState = Validator.getValidsInputs('edit');
 
 					if(Validator.validateInputs('edit', valuesState)) {
-						const bookEditedProps = Validator.defineBookProps('edit');
-						
-						Database.editBook(bookEditedProps, id);						
+						const editedProps = Validator.defineBookProps('edit');
+		
+						const requestOptions = {
+							headers : { 'Content-Type' : 'application/json' },
+							method : 'PUT',
+							body : JSON.stringify({
+								id : id,
+								livro : editedProps.livro,
+								publicacao : editedProps.publicacao,
+								autor : editedProps.autor,
+								editora : editedProps.editora,
+								ISBN : editedProps.ISBN 
+							})
+						}
+
+						Database.requestToDatabase(requestOptions, (error, response) => {
+							if(error) {
+								alert(`Houve um erro na operação\n\nError\n${error.name} : ${error.message}`);
+								Utils.changeBoxMsg($msgBox, Utils.messages().databaseError, 'danger');
+								Utils.closeWithDelay(document.getElementById('editModal'), null, 2000);
+							}else {
+								Database.editBook(editedProps, id);		
+								Book.updateRowFields(_thisBook.getProps(), _thisBook.DOM.rowFields);													
+							}
+						});
 
 						Utils.changeBoxMsg($msgBox, Utils.messages().success, 'success');
 						Utils.closeWithDelay(document.getElementById('editModal'), null, 1200);
-
-						Book.updateRowFields(_thisBook.props, _thisBook.DOM.rowFields);													
 
 					}else {
 						const $wrongInputs = Validator.wrongInputsRef(valuesState, Validator.getEditFields());
