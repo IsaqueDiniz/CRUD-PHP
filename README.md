@@ -33,6 +33,7 @@ Está configurado os seguintes scripts em **_package.json_**:
     "start": "webpack --mode production"
   }
 ```
+Esse comandos irão gerar o arquivo **_bundle.js_** na pasta **_dist_**.
 ***
 Também é necessário importar o Banco de Dados que está em:
 > ./src/server/mysql/database.sql
