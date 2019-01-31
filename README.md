@@ -39,7 +39,6 @@ Também é necessário importar o Banco de Dados que está em:
 
 #### Preview: 
 
-<<<<<<< HEAD
 ![alt text](preview.png 'Interface')
 
 
