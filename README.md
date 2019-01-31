@@ -23,8 +23,8 @@ Clone o repositório em **_public_html_**, e dentro da pasta do projeto rode os 
 npm install
 npm start
 ``` 
-
-Está configurado os seguinte scripts em **_package.json_**:
+***
+Está configurado os seguintes scripts em **_package.json_**:
 
 ```json
 "scripts": {
@@ -33,12 +33,19 @@ Está configurado os seguinte scripts em **_package.json_**:
     "start": "webpack --mode production"
   }
 ```
-
+***
 Também é necessário importar o Banco de Dados que está em:
 > ./src/server/mysql/database.sql
+***
+Para configurar as permissões de acesso de acordo com o seu usuário e senha do seu banco de dados MySql entre no arquivo  **_./src/server/php/Database.php_** :
+
+```php
+	private static $user = 'Isaque';
+	private static $password = '1234';
+	private static $dsn = 'mysql:host=127.0.0.1;dbname=db_BookList';
+```
 
 #### Preview: 
 
 ![alt text](preview.png 'Interface')
-
 

@@ -72,7 +72,7 @@ class Book {
 								Utils.changeBoxMsg($msgBox, Utils.messages().databaseError, 'danger');
 								Utils.closeWithDelay(document.getElementById('editModal'), null, 2000);
 							}else {
-								Database.editBook(editedProps, id);		
+								Database.editBookInStage(editedProps, id);		
 								Book.updateRowFields(_thisBook.getProps(), _thisBook.DOM.rowFields);													
 							}
 						});
@@ -124,19 +124,6 @@ class Book {
 							console.log(Database.getBooks())							
 						}
 					});
-
-					// Database.deleteFromDb(id, (error, response) => {
-					// 	if(error) {
-					// 		alert(`Não foi possivel deletar esse registro.\n\nErro\n${error.name} : ${error.message}`)
-					// 		setTimeout(() => $('#confirmModal').modal('hide'), 600);
-					// 	}else {
-					// 		const $row = document.getElementById(rowID);
-					// 		$table.removeChild($row);
-					// 		Listeners.remove(a_evt.target, attach);			
-					// 		Database.deleteFromStage(id);
-					// 		console.log(Database.getBooks());							
-					// 	}
-					// });
 				}
 			});
 

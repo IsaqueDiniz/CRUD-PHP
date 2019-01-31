@@ -26,7 +26,7 @@ class Database {
 		Stage.Books = Stage.Books.filter(current => current.props.id !== bookId );
 	}
 
-	static editBook(props, id) {
+	static editBookInStage(props, id) {
 		// take the book id, and edit that
 		Stage.Books.forEach(current => {
 			if(current.props.id === id) {
@@ -41,7 +41,7 @@ class Database {
 	}
 
 	static async requestToDatabase(requestOptions, callback) {
-		const URL = './src/server/php/index.php';
+		const URL = './src/server/php/routes.php';
 		try {
 			const request = await fetch(URL, requestOptions);
 			const statusCode = request.status;
