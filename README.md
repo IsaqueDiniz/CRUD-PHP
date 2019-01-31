@@ -17,17 +17,27 @@
 
 #### Começando:
 
-Clone o repositório, e dentro da pasta do projeto rode os seguintes comandos:
+Clone o repositório em **_public_html_**, e dentro da pasta do projeto rode os seguintes comandos:
 
 ```SHELL
 npm install
 npm start
 ``` 
 
+Está configurado os seguinte scripts em **_package.json_**:
+
+```json
+"scripts": {
+    "build:prod": "webpack --mode production",
+    "watch": "webpack --watch --mode development",
+    "start": "webpack --mode production"
+  }
+```
+
 Também é necessário importar o Banco de Dados que está em:
 > ./src/server/mysql/database.sql
 
 #### Preview: 
 
-![alt text](preview.png Interface)
+![alt text](preview.png 'Interface')
 
