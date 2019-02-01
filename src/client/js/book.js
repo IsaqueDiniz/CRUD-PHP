@@ -121,7 +121,6 @@ class Book {
 							$table.removeChild($row);
 							Listeners.remove(a_evt.target, attach);			
 							Database.deleteFromStage(id);
-							console.log(Database.getBooks())							
 						}
 					});
 				}
